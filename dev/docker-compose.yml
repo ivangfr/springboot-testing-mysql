@@ -1,0 +1,13 @@
+version: '3.5'
+services:
+
+  mysql:
+    image: mysql:5.7.21
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+     - MYSQL_ROOT_PASSWORD=secret
+     - MYSQL_DATABASE=userdb
+     - MYSQL_USERNAME=root
+     - MYSQL_PASSWORD=secret

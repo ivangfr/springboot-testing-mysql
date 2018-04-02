@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: user-service
+  jpa.hibernate.ddl-auto: create
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_ADDR:localhost}:3306/userdb?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: root
+    password: secret
+management:
+  endpoints.web.exposure.include: beans
+  security.enabled: false
+---
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:userdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+  h2.console.enabled: true
