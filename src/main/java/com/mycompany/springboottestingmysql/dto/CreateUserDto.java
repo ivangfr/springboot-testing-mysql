@@ -23,7 +23,7 @@ public class CreateUserDto {
     private String email;
 
     @Past
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "CET")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;
 
 }

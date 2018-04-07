@@ -1,4 +1,4 @@
-# springboot-testing
+# springboot-testing-mysql
 
 ## Goal
 
@@ -9,12 +9,22 @@ The goals of this project are:
 
 ## Running the application
 
-1. Start the application
+1. Inside `/springboot-testing-mysql/dev` folder run
 ```
-./gradlew bootRun
+docker-compose up
 ```
 
-2. Access Swagger website
+2. Open a new terminal and, inside `/springboot-testing-mysql/dev` folder, run the following script to initialize the MySQL database
+```
+./init-db.sh
+```
+
+3. Go to `/springboot-testing-mysql` folder and run the command to start the application
+```
+gradle bootRun
+```
+
+4. Access Swagger website
 ```
 http://localhost:8080/swagger-ui.html
 ```
@@ -154,4 +164,3 @@ Integration tests should run separated from the unit tests and, mainly, it shoul
 
 - https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
 - http://www.baeldung.com/spring-boot-testing
-

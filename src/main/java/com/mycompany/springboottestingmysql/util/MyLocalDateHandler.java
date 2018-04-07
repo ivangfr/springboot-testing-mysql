@@ -8,11 +8,11 @@ import java.util.Date;
 
 public class MyLocalDateHandler {
 
-    public static final String PATTERN_dd_MM_yyyy = "dd-MM-yyyy";
-    public static final String ZONE_ID = "CET";
+    public static final String PATTERN = "dd-MM-yyyy";
+    public static final String ZONE_ID = "UTC";
 
     public static Date fromStringToDate(String string) {
-        return fromStringToDate(string, PATTERN_dd_MM_yyyy, ZONE_ID);
+        return fromStringToDate(string, PATTERN, ZONE_ID);
     }
 
     public static Date fromStringToDate(String string, String pattern, String zoneId) {
@@ -23,7 +23,7 @@ public class MyLocalDateHandler {
     }
 
     public static String fromDateToString(Date date) {
-        return fromDateToString(date, PATTERN_dd_MM_yyyy, ZONE_ID);
+        return fromDateToString(date, PATTERN, ZONE_ID);
     }
 
     public static String fromDateToString(Date date, String pattern, String zoneId) {

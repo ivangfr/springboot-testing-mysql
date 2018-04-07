@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.mycompany.springboottestingmysql.helper.UserServiceTestHelper.*;
-import static com.mycompany.springboottestingmysql.util.MyLocalDateHandler.PATTERN_dd_MM_yyyy;
+import static com.mycompany.springboottestingmysql.util.MyLocalDateHandler.PATTERN;
 import static com.mycompany.springboottestingmysql.util.MyLocalDateHandler.fromDateToString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -52,7 +52,7 @@ public class UserControllerTests {
 
     @Before
     public void setUp() {
-        objectMapper = new ObjectMapper().setDateFormat(new SimpleDateFormat(PATTERN_dd_MM_yyyy));
+        objectMapper = new ObjectMapper().setDateFormat(new SimpleDateFormat(PATTERN));
     }
 
     @Test
