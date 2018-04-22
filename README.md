@@ -36,12 +36,12 @@ http://localhost:8080/swagger-ui.html
 gradle test integrationTest
 ```
 
-2. From `springboot-testing` root folder, unit testing report can be found in
+2. From `springboot-testing-mysql` root folder, unit testing report can be found in
 ```
 /build/reports/tests/test/index.html
 ```
 
-3. From `springboot-testing` root folder, integration testing report can be found in
+3. From `springboot-testing-mysql` root folder, integration testing report can be found in
 ```
 /build/reports/tests/integrationTest/index.html
 ```
