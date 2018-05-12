@@ -4,7 +4,7 @@
 
 The goals of this project are:
 
-1. Create a simple REST API to manage users;
+1. Create a simple REST API to manage users, `user-service`;
 2. Explore the utilities and annotations that Spring Boot provides when testing applications.
 
 ## Running the application
@@ -67,7 +67,7 @@ For example:
 ```
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ExampleRepositoryTests {
+public class UserRepositoryTests {
 
 	@Autowired
 	private TestEntityManager entityManager;
