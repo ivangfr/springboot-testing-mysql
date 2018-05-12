@@ -103,6 +103,17 @@ public class UserController {
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UserDto> deleteUser(@PathVariable UUID id) throws UserNotFoundException {
+        logger.info("Delete request to remove user with id {}", id);
+
+        User user = userService.validateAndGetUserById(id.toString());
+        userService.deleteUser(user);
+
+        logger.info("DELETED {}", user);
+        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
+    }
+
     @ExceptionHandler({UserNotFoundException.class})
     public void handleNotFoundException(Exception e, HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());

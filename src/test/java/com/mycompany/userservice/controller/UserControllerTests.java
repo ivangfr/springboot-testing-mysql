@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.*;
 import static com.mycompany.userservice.util.MyLocalDateHandler.PATTERN;
@@ -279,6 +280,36 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.username", is(user.getUsername())))
                 .andExpect(jsonPath("$.email", is(user.getEmail())))
                 .andExpect(jsonPath("$.birthday", is(fromDateToString(updateUserDto.getBirthday()))));
+    }
+
+    @Test
+    public void given_oneUser_when_deleteUser_then_returnOk() throws Exception {
+        User user = getDefaultUser();
+
+        given(userService.validateAndGetUserById(user.getId())).willReturn(user);
+        willDoNothing().given(userService).deleteUser(any(User.class));
+
+        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", user.getId())
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(user.getId())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.birthday", is(fromDateToString(user.getBirthday()))));
+    }
+
+    @Test
+    public void given_noUser_when_deleteUser_then_returnNotFound() throws Exception {
+        given(userService.validateAndGetUserById(any(String.class))).willThrow(UserNotFoundException.class);
+
+        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID())
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print());
+
+        resultActions.andExpect(status().isNotFound());
     }
 
 }

@@ -313,4 +313,41 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getBirthday()).isEqualTo(updateUserDto.getBirthday());
     }
 
+    /*
+     * DELETE /api/users
+     * ================= */
+
+    @Test
+    public void given_noUsers_when_deleteUser_then_returnNotFound() {
+        UUID id = UUID.randomUUID();
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange("/api/users/" + id, HttpMethod.DELETE, null, MessageError.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
+        assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
+        assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with id '" + id + "' doesn't exist.");
+        assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users/" + id);
+        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserNotFound");
+        assertThat(responseEntity.getBody().getErrors()).isNull();
+    }
+
+    @Test
+    public void given_oneUser_when_deleteUser_then_returnUserJson() {
+        User user = getDefaultUser();
+        userRepository.save(user);
+
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.DELETE, null, UserDto.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody().getUsername()).isEqualTo(user.getUsername());
+        assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody().getBirthday()).isEqualTo(user.getBirthday());
+
+        User userFound = userRepository.findUserById(user.getId());
+
+        assertThat(userFound).isNull();
+    }
+
 }
