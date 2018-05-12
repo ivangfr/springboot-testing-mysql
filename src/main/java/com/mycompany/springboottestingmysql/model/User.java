@@ -29,13 +29,9 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn;
 
-//    H2 database doesn't have the ON UPDATE as MySQL has.
-//    For this case, it would be nice to have a MySQL embedded DB!
-//    However, I haven't found yet a good one.
-//    ---
-//    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date updatedOn;
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedOn;
 
     public User(String id, String username, String email, Date birthday) {
         this.id = id;
