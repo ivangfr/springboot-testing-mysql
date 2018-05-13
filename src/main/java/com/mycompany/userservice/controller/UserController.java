@@ -28,7 +28,7 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class UserController {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -114,7 +114,7 @@ public class UserController {
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
     }
 
-    @ExceptionHandler({UserNotFoundException.class})
+    @ExceptionHandler(UserNotFoundException.class)
     public void handleNotFoundException(Exception e, HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }

@@ -1,5 +1,6 @@
 package com.mycompany.userservice.service;
 
+import com.google.common.collect.Lists;
 import com.mycompany.userservice.exception.UserEmailDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.exception.UserUsernameDuplicatedException;
@@ -13,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
@@ -59,7 +59,7 @@ public class UserServiceImplTests {
     @Test
     public void given_oneUser_when_getAllUsers_then_returnListWithOneUser() {
         User user = getDefaultUser();
-        List<User> users = Arrays.asList(user);
+        List<User> users = Lists.newArrayList(user);
 
         given(userRepository.findAll()).willReturn(users);
 
@@ -114,7 +114,7 @@ public class UserServiceImplTests {
         given(userRepository.findUserById(any(String.class))).willReturn(null);
 
         expectedException.expect(UserNotFoundException.class);
-        expectedException.expectMessage(String.format("User with id 'xyz' doesn't exist"));
+        expectedException.expectMessage("User with id 'xyz' doesn't exist");
 
         userService.validateAndGetUserById("xyz");
     }
@@ -134,7 +134,7 @@ public class UserServiceImplTests {
         given(userRepository.findUserByUsername(any(String.class))).willReturn(null);
 
         expectedException.expect(UserNotFoundException.class);
-        expectedException.expectMessage(String.format("User with username 'ivan' doesn't exist"));
+        expectedException.expectMessage("User with username 'ivan' doesn't exist");
 
         userService.validateAndGetUserByUsername("ivan");
     }
@@ -145,7 +145,7 @@ public class UserServiceImplTests {
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
         expectedException.expect(UserUsernameDuplicatedException.class);
-        expectedException.expectMessage(String.format("User with username 'ivan' already exists."));
+        expectedException.expectMessage("User with username 'ivan' already exists.");
 
         userService.validateUserExistsByUsername(user.getUsername());
     }
@@ -164,7 +164,7 @@ public class UserServiceImplTests {
         given(userRepository.findUserByEmail(user.getEmail())).willReturn(user);
 
         expectedException.expect(UserEmailDuplicatedException.class);
-        expectedException.expectMessage(String.format("User with email 'ivan@test' already exists."));
+        expectedException.expectMessage("User with email 'ivan@test' already exists.");
 
         userService.validateUserExistsByEmail(user.getEmail());
     }

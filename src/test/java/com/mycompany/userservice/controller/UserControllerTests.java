@@ -1,6 +1,7 @@
 package com.mycompany.userservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.mycompany.userservice.config.ModelMapperConfig;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,7 +72,7 @@ public class UserControllerTests {
     @Test
     public void given_oneUser_when_getAllUsers_then_returnJsonArrayWithOneUser() throws Exception {
         User user = getDefaultUser();
-        List<User> users = Arrays.asList(user);
+        List<User> users = Lists.newArrayList(user);
 
         given(userService.getAllUsers()).willReturn(users);
 
