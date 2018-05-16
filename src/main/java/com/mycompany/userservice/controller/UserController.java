@@ -8,9 +8,8 @@ import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.exception.UserUsernameDuplicatedException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {
-
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -41,7 +39,7 @@ public class UserController {
 
     @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        logger.info("Get all users");
+        log.info("Get all users");
 
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : userService.getAllUsers()) {
@@ -53,7 +51,7 @@ public class UserController {
 
     @GetMapping(value = "/users/username/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) throws UserNotFoundException {
-        logger.info("Get user with username '{}'", username);
+        log.info("Get user with username '{}'", username);
 
         User user = userService.validateAndGetUserByUsername(username);
 
@@ -63,7 +61,7 @@ public class UserController {
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto)
             throws UserUsernameDuplicatedException, UserEmailDuplicatedException {
-        logger.info("Post request to create user {}", createUserDto);
+        log.info("Post request to create user {}", createUserDto);
 
         userService.validateUserExistsByUsername(createUserDto.getUsername());
         userService.validateUserExistsByEmail(createUserDto.getEmail());
@@ -73,14 +71,14 @@ public class UserController {
         user.setId(id.toString());
         user = userService.saveUser(user);
 
-        logger.info("CREATED {}", user);
+        log.info("CREATED {}", user);
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserDto updateUserDto)
             throws UserNotFoundException, UserUsernameDuplicatedException, UserEmailDuplicatedException {
-        logger.info("Put request to update user with id {}. New values: {}", id, updateUserDto);
+        log.info("Put request to update user with id {}. New values: {}", id, updateUserDto);
 
         User user = userService.validateAndGetUserById(id.toString());
 
@@ -99,18 +97,18 @@ public class UserController {
         modelMapper.map(updateUserDto, user);
         user = userService.saveUser(user);
 
-        logger.info("UPDATED {}", user);
+        log.info("UPDATED {}", user);
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> deleteUser(@PathVariable UUID id) throws UserNotFoundException {
-        logger.info("Delete request to remove user with id {}", id);
+        log.info("Delete request to remove user with id {}", id);
 
         User user = userService.validateAndGetUserById(id.toString());
         userService.deleteUser(user);
 
-        logger.info("DELETED {}", user);
+        log.info("DELETED {}", user);
         return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
     }
 

@@ -46,13 +46,14 @@ sourceSets {
             runtimeClasspath += main.output + test.output
             srcDir file('src/integration-test/java')
         }
+//        resources.srcDir file('src/integration-test/resources')
     }
 }
 
 idea {
     module {
         testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
-        testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+//        testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
     }
 }
 
@@ -71,5 +72,6 @@ task integrationTest(type: Test) {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
+
 dockerCompose.isRequiredBy(integrationTest)
 dockerCompose.isRequiredBy(test)
