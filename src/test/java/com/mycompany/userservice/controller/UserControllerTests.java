@@ -139,7 +139,7 @@ public class UserControllerTests {
     public void given_existingEmail_when_createAnotherUserWithTheSameEmail_then_returnBadRequest() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
 
-        willDoNothing().given(userService).validateUserExistsByUsername(any(String.class));
+        willDoNothing().given(userService).validateUserExistsByUsername(anyString());
         willThrow(UserEmailDuplicatedException.class).given(userService).validateUserExistsByEmail(createUserDto.getEmail());
 
         ResultActions resultActions = mockMvc.perform(post("/api/users")
@@ -156,8 +156,8 @@ public class UserControllerTests {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         User user = getDefaultUser();
 
-        willDoNothing().given(userService).validateUserExistsByUsername(any(String.class));
-        willDoNothing().given(userService).validateUserExistsByEmail(any(String.class));
+        willDoNothing().given(userService).validateUserExistsByUsername(anyString());
+        willDoNothing().given(userService).validateUserExistsByEmail(anyString());
         given(userService.saveUser(any(User.class))).willReturn(user);
 
         ResultActions resultActions = mockMvc.perform(post("/api/users")
@@ -218,8 +218,8 @@ public class UserControllerTests {
         UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan2", "ivan2@test", "02-02-2018");
 
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
-        willDoNothing().given(userService).validateUserExistsByUsername(any(String.class));
-        willDoNothing().given(userService).validateUserExistsByEmail(any(String.class));
+        willDoNothing().given(userService).validateUserExistsByUsername(anyString());
+        willDoNothing().given(userService).validateUserExistsByEmail(anyString());
         given(userService.saveUser(any(User.class))).willReturn(user);
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
@@ -243,7 +243,7 @@ public class UserControllerTests {
         updateUserDto.setUsername("ivan2");
 
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
-        willDoNothing().given(userService).validateUserExistsByUsername(any(String.class));
+        willDoNothing().given(userService).validateUserExistsByUsername(anyString());
         given(userService.saveUser(any(User.class))).willReturn(user);
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
@@ -303,7 +303,7 @@ public class UserControllerTests {
 
     @Test
     public void given_noUser_when_deleteUser_then_returnNotFound() throws Exception {
-        given(userService.validateAndGetUserById(any(String.class))).willThrow(UserNotFoundException.class);
+        given(userService.validateAndGetUserById(anyString())).willThrow(UserNotFoundException.class);
 
         ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID())
                 .accept(MediaType.APPLICATION_JSON_UTF8))

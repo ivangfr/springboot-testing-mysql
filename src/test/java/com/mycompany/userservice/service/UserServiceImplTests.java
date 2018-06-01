@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -111,7 +111,7 @@ public class UserServiceImplTests {
 
     @Test
     public void given_nonExistingId_when_validateAndGetUserById_then_throwException() throws UserNotFoundException {
-        given(userRepository.findUserById(any(String.class))).willReturn(null);
+        given(userRepository.findUserById(anyString())).willReturn(null);
 
         expectedException.expect(UserNotFoundException.class);
         expectedException.expectMessage("User with id 'xyz' doesn't exist");
@@ -131,7 +131,7 @@ public class UserServiceImplTests {
 
     @Test
     public void given_nonExistingUsername_when_validateAndGetUserByUsername_then_throwException() throws UserNotFoundException {
-        given(userRepository.findUserByUsername(any(String.class))).willReturn(null);
+        given(userRepository.findUserByUsername(anyString())).willReturn(null);
 
         expectedException.expect(UserNotFoundException.class);
         expectedException.expectMessage("User with username 'ivan' doesn't exist");

@@ -24,10 +24,7 @@ docker-compose up
 gradle bootRun
 ```
 
-4. Access Swagger website
-```
-http://localhost:8080/swagger-ui.html
-```
+4. Access Swagger website: http://localhost:8080/swagger-ui.html
 
 ## Running unit and integration testing
 
