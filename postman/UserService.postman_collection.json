@@ -1,0 +1,476 @@
+{
+	"info": {
+		"_postman_id": "4ef5d234-08d7-48e7-a7e2-41cc4b8f4a90",
+		"name": "UserService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Users - Empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "efcf59de-3047-4453-bb3d-22f87436ae64",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"pm.test(\"Response is an empty array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(0);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db5fa6e5-0fe7-4c40-9f0c-da33c1c9c753",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"var user_schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"id\": { \"type\":\"string\" },",
+							"        \"username\": { \"type\":\"string\" },",
+							"        \"email\": { \"type\":\"string\" },",
+							"        \"birthday\": { \"type\":\"string\" }",
+							"    },",
+							"    \"required\": [\"id\", \"username\", \"email\", \"birthday\"]",
+							"};",
+							"",
+							"pm.test('User Schema is valid', function() {",
+							"    var jsonData = pm.response.json();",
+							"    var valid = tv4.validate(jsonData, user_schema);",
+							"    if (valid !== true) {",
+							"        console.log(tv4.error.message);",
+							"    }",
+							"    pm.expect(valid).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Response has User Data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.username).to.eql(\"ivan\");",
+							"    pm.expect(jsonData.email).to.eql(\"ivan@test.com\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"01-01-1999\");",
+							"    pm.globals.set(\"user_id\", jsonData.id);",
+							"    pm.globals.set(\"user_username\", jsonData.username);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"birthday\": \"01-01-1999\",\n  \"email\": \"ivan@test.com\",\n  \"username\": \"ivan\"\n}"
+				},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users - Added",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5cee29db-de8a-417a-9ac9-c4b4ec563186",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"var user_schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"id\": { \"type\":\"string\" },",
+							"        \"username\": { \"type\":\"string\" },",
+							"        \"email\": { \"type\":\"string\" },",
+							"        \"birthday\": { \"type\":\"string\" }",
+							"    },",
+							"    \"required\": [\"id\", \"username\", \"email\", \"birthday\"]",
+							"};",
+							"",
+							"pm.test('User Schema is valid', function() {",
+							"    var jsonData = pm.response.json();",
+							"    var valid = tv4.validate(jsonData, user_schema);",
+							"    if (valid !== true) {",
+							"        console.log(tv4.error.message);",
+							"    }",
+							"    pm.expect(valid).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Response has User Data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"user_id\"));",
+							"    pm.expect(jsonData.username).to.eql(\"ivan\");",
+							"    pm.expect(jsonData.email).to.eql(\"ivan@test.com\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"01-01-1999\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/username/{{user_username}}",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"username",
+						"{{user_username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users - One User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "41013be6-554b-46d9-b510-6b998c590a06",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"var array_user_schema = {",
+							"    \"type\": \"array\",",
+							"    \"items\": {",
+							"        \"type\": \"object\",",
+							"        \"properties\": {",
+							"            \"id\": { \"type\":\"string\" },",
+							"            \"username\": { \"type\":\"string\" },",
+							"            \"email\": { \"type\":\"string\" },",
+							"            \"birthday\": { \"type\":\"string\" }",
+							"        },",
+							"        \"required\": [\"id\", \"username\", \"email\", \"birthday\"]",
+							"    }",
+							"};",
+							"",
+							"pm.test('User Schema is valid', function() {",
+							"    var jsonData = pm.response.json();",
+							"    var valid = tv4.validate(jsonData, array_user_schema);",
+							"    if (valid !== true) {",
+							"        console.log(tv4.error.message);",
+							"    }",
+							"    pm.expect(valid).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Response is an empty array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData);",
+							"    pm.expect(jsonData.length).to.eql(1);",
+							"    pm.expect(jsonData[0].id).to.eql(pm.globals.get(\"user_id\"));",
+							"    pm.expect(jsonData[0].username).to.eql(\"ivan\");",
+							"    pm.expect(jsonData[0].email).to.eql(\"ivan@test.com\");",
+							"    pm.expect(jsonData[0].birthday).to.eql(\"01-01-1999\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9b24740-b9f2-4046-89e5-389bd3f6c875",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"pm.test(\"Response has User Data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.username).to.eql(\"ivan2\");",
+							"    pm.expect(jsonData.email).to.eql(\"ivan2@test.com\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"02-02-1999\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"birthday\": \"02-02-1999\",\n  \"email\": \"ivan2@test.com\",\n  \"username\": \"ivan2\"\n}"
+				},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/{{user_id}}",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "51ce2e39-cbe0-4003-8cd3-ced08cf956e8",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"pm.test(\"Response has User Data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"user_id\"));",
+							"    pm.expect(jsonData.username).to.eql(\"ivan2\");",
+							"    pm.expect(jsonData.email).to.eql(\"ivan2@test.com\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"02-02-1999\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/{{user_id}}",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users - Deleted (CLEAN UP)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a64bea95-ded3-4b1e-a959-322d4c1ea3eb",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"var error_schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"timestamp\": { \"type\":\"string\" },",
+							"        \"status\": { \"type\":\"integer\" },",
+							"        \"error\": { \"type\":\"string\" },",
+							"        \"exception\": { \"type\":\"string\" },",
+							"        \"message\": { \"type\":\"string\" },",
+							"        \"path\": { \"type\":\"string\" },",
+							"        \"errorCode\": { \"type\":\"string\" }",
+							"    },",
+							"    \"required\": [\"timestamp\", \"status\", \"error\", \"exception\", \"message\", \"path\", \"errorCode\"]",
+							"};",
+							"",
+							"pm.test('Error Schema is valid', function() {",
+							"    var jsonData = pm.response.json();",
+							"    var valid = tv4.validate(jsonData, error_schema);",
+							"    if (valid !== true) {",
+							"        console.log(tv4.error.message);",
+							"    }",
+							"    pm.expect(valid).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Response has User Data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(404);",
+							"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
+							"    pm.expect(jsonData.exception).to.eql(\"com.mycompany.userservice.exception.UserNotFoundException\");",
+							"    pm.expect(jsonData.errorCode).to.eql(\"UserNotFound\");",
+							"});",
+							"",
+							"pm.globals.unset(\"user_id\");",
+							"pm.globals.unset(\"user_username\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/username/{{user_name}}",
+					"protocol": "http",
+					"host": [
+						"{{USER_SERVICE_ADDR}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"username",
+						"{{user_name}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

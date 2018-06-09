@@ -4,43 +4,72 @@
 
 The goals of this project are:
 
-1. Create a simple REST API to manage users, `user-service`;
+1. Create a simple REST API to manage users, `user-service`. The database used is [`MySQL`](https://www.mysql.com);
 2. Explore the utilities and annotations that Spring Boot provides when testing applications.
 
 ## Running the application
 
 1. Inside `/springboot-testing-mysql/dev` folder run
 ```
-docker-compose up
+docker-compose up -d
+```
+> To stop and remove containers, networks, images, and volumes type:
+> ```
+> docker-compose down -v
+> ```
+
+2. Wait a little bit until `MySQL` is `Up (healthy)`. You can check it running
+```
+docker-compose ps
 ```
 
-2. Open a new terminal and, inside `/springboot-testing-mysql/dev` folder, run the following script to initialize the MySQL database
+3. Inside `/springboot-testing-mysql/dev` folder, run the following script to initialize the MySQL database
 ```
 ./init-db.sh
 ```
 
-3. Go to `/springboot-testing-mysql` folder and run the command to start the application
+4. Go to `/springboot-testing-mysql` root folder and run the command to start the application
 ```
-gradle bootRun
+gradle clean bootRun
 ```
 
-4. Access Swagger website: http://localhost:8080/swagger-ui.html
+5. Access Swagger website: http://localhost:8080/swagger-ui.html
 
 ## Running unit and integration testing
 
-1. In order to run unit and integration testing type
+1. Go to `/springboot-testing-mysql` root folder
+
+2. In order to run unit and integration testing type
 ```
 gradle test integrationTest
 ```
 
-2. From `springboot-testing-mysql` root folder, unit testing report can be found in
+3. From `springboot-testing-mysql` root folder, unit testing report can be found in
 ```
 /build/reports/tests/test/index.html
 ```
 
-3. From `springboot-testing-mysql` root folder, integration testing report can be found in
+4. From `springboot-testing-mysql` root folder, integration testing report can be found in
 ```
 /build/reports/tests/integrationTest/index.html
+```
+
+## Using [`Postman`](https://www.getpostman.com) and [`Newman`](https://github.com/postmanlabs/newman) for testing
+
+- In the `/springboot-testing-mysql/postman` folder there is a predefined `Postman` testing collection for `user-service`. You can import and edit it in your `Postman`.
+
+- Export to `HOST_IP_ADDR` environment variable the ip address of your machine
+> the ip address can be obtained by executing `ifconfig` command on Mac/Linux terminal or `ipconfig` on Windows;
+```
+export HOST_IP_ADDR=...
+```
+
+- Go to `/springboot-testing-mysql` root folder and execute the following command to run `Newman` docker container
+```
+docker run -t --rm --name newman \
+-v $PWD/postman:/etc/newman \
+postman/newman_ubuntu1404:3.9.4 \
+run UserService.postman_collection.json --global-var "USER_SERVICE_ADDR=$HOST_IP_ADDR"
 ```
 
 ## More about testing Spring Boot Applications
