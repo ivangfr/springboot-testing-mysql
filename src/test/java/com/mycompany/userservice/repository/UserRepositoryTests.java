@@ -1,8 +1,8 @@
 package com.mycompany.userservice.repository;
 
 import com.mycompany.userservice.model.User;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -11,12 +11,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -30,7 +30,7 @@ public class UserRepositoryTests {
     private UserRepository userRepository;
 
     @Test
-    public void given_oneUser_when_findUserByUsername_then_returnUser() {
+    void given_oneUser_when_findUserByUsername_then_returnUser() {
         User user = getDefaultUser();
         entityManager.persist(user);
 
@@ -40,14 +40,14 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void given_noUsers_when_findUserByUsernameUsingNonExistingUsername_then_returnNull() {
+    void given_noUsers_when_findUserByUsernameUsingNonExistingUsername_then_returnNull() {
         User userFound = userRepository.findUserByUsername("ivan2");
 
         assertThat(userFound).isNull();
     }
 
     @Test
-    public void given_oneUser_when_findUserById_then_returnUser() {
+    void given_oneUser_when_findUserById_then_returnUser() {
         User user = getDefaultUser();
         entityManager.persist(user);
 
@@ -57,13 +57,13 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void given_noUsers_when_findUserByIdUsingNonExistingId_then_returnNull() {
+    void given_noUsers_when_findUserByIdUsingNonExistingId_then_returnNull() {
         User userFound = userRepository.findUserById("xyz");
         assertThat(userFound).isNull();
     }
 
     @Test
-    public void given_oneUser_when_findUserByEmail_then_returnUser() {
+    void given_oneUser_when_findUserByEmail_then_returnUser() {
         User user = getDefaultUser();
         entityManager.persist(user);
 
@@ -73,7 +73,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void given_noUsers_when_findUserByEmailUsingNonExistingEmail_then_returnNull() {
+    void given_noUsers_when_findUserByEmailUsingNonExistingEmail_then_returnNull() {
         User userFound = userRepository.findUserByEmail("ivan2@test");
         assertThat(userFound).isNull();
     }

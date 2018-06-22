@@ -5,8 +5,8 @@ import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -18,14 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("dev")
@@ -42,7 +42,7 @@ public class RandomPortTestRestTemplateTests {
      * ============== */
 
     @Test
-    public void given_noUsers_when_getAllUsers_then_returnEmptyArray() {
+    void given_noUsers_when_getAllUsers_then_returnEmptyArray() {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -50,7 +50,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_getAllUsers_then_returnArrayWithUser() {
+    void given_oneUser_when_getAllUsers_then_returnArrayWithUser() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -69,7 +69,7 @@ public class RandomPortTestRestTemplateTests {
      * ================================== */
 
     @Test
-    public void given_noUsers_when_getUserByUsername_then_returnNotFound() {
+    void given_noUsers_when_getUserByUsername_then_returnNotFound() {
         String username = "ivan";
         ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity("/api/users/username/" + username, MessageError.class);
 
@@ -84,7 +84,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_getUserByUsername_then_returnUserJson() {
+    void given_oneUser_when_getUserByUsername_then_returnUserJson() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -102,7 +102,7 @@ public class RandomPortTestRestTemplateTests {
      * =============== */
 
     @Test
-    public void given_noUsers_when_createUser_then_returnUserJson() {
+    void given_noUsers_when_createUser_then_returnUserJson() {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
 
@@ -114,7 +114,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_createUserWithAnExistingUsername_then_returnBadRequest() {
+    void given_oneUser_when_createUserWithAnExistingUsername_then_returnBadRequest() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -132,7 +132,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_createUserWithAnExistingEmail_then_returnBadRequest() {
+    void given_oneUser_when_createUserWithAnExistingEmail_then_returnBadRequest() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -150,7 +150,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_createUserWithUniqueUsernameAndEmail_then_returnUserJson() {
+    void given_oneUser_when_createUserWithUniqueUsernameAndEmail_then_returnUserJson() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -165,7 +165,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_noUsers_when_createUserInformingInvalidEmailFormat_then_returnBadRequest() {
+    void given_noUsers_when_createUserInformingInvalidEmailFormat_then_returnBadRequest() {
         CreateUserDto createUserDto = getAnCreateUserDto("ivan", "ivan", "01-01-2018");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
@@ -187,7 +187,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_noUsers_when_createUserMissingUsername_then_returnBadRequest() {
+    void given_noUsers_when_createUserMissingUsername_then_returnBadRequest() {
         CreateUserDto createUserDto = getAnCreateUserDto(null, "ivan@test", "01-01-2018");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
@@ -213,7 +213,7 @@ public class RandomPortTestRestTemplateTests {
      * ============== */
 
     @Test
-    public void given_noUsers_when_updateUser_then_returnNotFound() {
+    void given_noUsers_when_updateUser_then_returnNotFound() {
         String id = "5dcb867b-01e5-4741-8da8-c8c97e17842c";
         UpdateUserDto updateUserDto = getDefaultUpdateUserDto();
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
@@ -230,7 +230,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_twoUsers_when_updateUser1WithUser2Username_then_returnBadRequest() {
+    void given_twoUsers_when_updateUser1WithUser2Username_then_returnBadRequest() {
         User user1 = getDefaultUser();
         userRepository.save(user1);
 
@@ -254,7 +254,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_twoUsers_when_updateUser1WithUser2Email_then_returnBadRequest() {
+    void given_twoUsers_when_updateUser1WithUser2Email_then_returnBadRequest() {
         User user1 = getDefaultUser();
         userRepository.save(user1);
 
@@ -278,7 +278,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserWithUniqueUsernameAndEmail_then_returnUserJson() {
+    void given_oneUser_when_updateUserWithUniqueUsernameAndEmail_then_returnUserJson() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -297,7 +297,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserInformingSameUsernameAndEmailButDifferentBirthday_then_returnUserJson() {
+    void given_oneUser_when_updateUserInformingSameUsernameAndEmailButDifferentBirthday_then_returnUserJson() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -318,7 +318,7 @@ public class RandomPortTestRestTemplateTests {
      * ================= */
 
     @Test
-    public void given_noUsers_when_deleteUser_then_returnNotFound() {
+    void given_noUsers_when_deleteUser_then_returnNotFound() {
         UUID id = UUID.randomUUID();
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange("/api/users/" + id, HttpMethod.DELETE, null, MessageError.class);
 
@@ -333,7 +333,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneUser_when_deleteUser_then_returnUserJson() {
+    void given_oneUser_when_deleteUser_then_returnUserJson() {
         User user = getDefaultUser();
         userRepository.save(user);
 

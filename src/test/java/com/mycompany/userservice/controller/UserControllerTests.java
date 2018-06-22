@@ -10,15 +10,15 @@ import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.exception.UserUsernameDuplicatedException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 @Import(ModelMapperConfig.class)
 public class UserControllerTests {
@@ -49,15 +49,15 @@ public class UserControllerTests {
     @MockBean
     private UserService userService;
 
-    private ObjectMapper objectMapper;
+    private static ObjectMapper objectMapper;
 
-    @Before
-    public void setUp() {
+    @BeforeAll
+    static void setUp() {
         objectMapper = new ObjectMapper().setDateFormat(new SimpleDateFormat(PATTERN));
     }
 
     @Test
-    public void given_noUsers_when_getAllUsers_then_returnEmptyJsonArray() throws Exception {
+    void given_noUsers_when_getAllUsers_then_returnEmptyJsonArray() throws Exception {
         given(userService.getAllUsers()).willReturn(new ArrayList<>());
 
         ResultActions resultActions = mockMvc.perform(get("/api/users")
@@ -70,7 +70,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_getAllUsers_then_returnJsonArrayWithOneUser() throws Exception {
+    void given_oneUser_when_getAllUsers_then_returnJsonArrayWithOneUser() throws Exception {
         User user = getDefaultUser();
         List<User> users = Lists.newArrayList(user);
 
@@ -90,7 +90,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_nonExistingUsername_when_getUserByUsername_then_returnNotFound() throws Exception {
+    void given_nonExistingUsername_when_getUserByUsername_then_returnNotFound() throws Exception {
         String username = "ivan2";
 
         given(userService.validateAndGetUserByUsername(username)).willThrow(UserNotFoundException.class);
@@ -103,7 +103,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_getUserByUsername_then_returnUserJson() throws Exception {
+    void given_oneUser_when_getUserByUsername_then_returnUserJson() throws Exception {
         User user = getDefaultUser();
 
         given(userService.validateAndGetUserByUsername(user.getUsername())).willReturn(user);
@@ -121,7 +121,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_existingUsername_when_createUserWithTheSameUsername_then_returnBadRequest() throws Exception {
+    void given_existingUsername_when_createUserWithTheSameUsername_then_returnBadRequest() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
 
         willThrow(UserUsernameDuplicatedException.class).given(userService).validateUserExistsByUsername(createUserDto.getUsername());
@@ -136,7 +136,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_existingEmail_when_createAnotherUserWithTheSameEmail_then_returnBadRequest() throws Exception {
+    void given_existingEmail_when_createAnotherUserWithTheSameEmail_then_returnBadRequest() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
 
         willDoNothing().given(userService).validateUserExistsByUsername(anyString());
@@ -152,7 +152,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_nonExistingUsernameAndEmail_when_createUser_then_returnUserJson() throws Exception {
+    void given_nonExistingUsernameAndEmail_when_createUser_then_returnUserJson() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         User user = getDefaultUser();
 
@@ -175,7 +175,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserWithAlreadyExistingUsername_then_returnBadRequest() throws Exception {
+    void given_oneUser_when_updateUserWithAlreadyExistingUsername_then_returnBadRequest() throws Exception {
         User user = getDefaultUser();
         String username = "ivan2";
         UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -194,7 +194,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserWithAlreadyExistingEmail_then_returnBadRequest() throws Exception {
+    void given_oneUser_when_updateUserWithAlreadyExistingEmail_then_returnBadRequest() throws Exception {
         User user = getDefaultUser();
         String email = "ivan2@test";
         UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -213,7 +213,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserChangingAllFields_then_returnUserJsonWithAllFieldsChanged() throws Exception {
+    void given_oneUser_when_updateUserChangingAllFields_then_returnUserJsonWithAllFieldsChanged() throws Exception {
         User user = getDefaultUser();
         UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan2", "ivan2@test", "02-02-2018");
 
@@ -237,7 +237,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserChangingJustUsernameField_then_returnUserJsonWithJustUsernameChanged() throws Exception {
+    void given_oneUser_when_updateUserChangingJustUsernameField_then_returnUserJsonWithJustUsernameChanged() throws Exception {
         User user = getDefaultUser();
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setUsername("ivan2");
@@ -261,7 +261,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_updateUserWithSameUsernameAndEmailButDifferentBirthday_then_returnUserJsonWithJustBirthdayChanged() throws Exception {
+    void given_oneUser_when_updateUserWithSameUsernameAndEmailButDifferentBirthday_then_returnUserJsonWithJustBirthdayChanged() throws Exception {
         User user = getDefaultUser();
         UpdateUserDto updateUserDto = getAnUpdateUserDto(user.getUsername(), user.getEmail(), "02-02-2018");
 
@@ -283,7 +283,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_oneUser_when_deleteUser_then_returnOk() throws Exception {
+    void given_oneUser_when_deleteUser_then_returnOk() throws Exception {
         User user = getDefaultUser();
 
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
@@ -302,7 +302,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void given_noUser_when_deleteUser_then_returnNotFound() throws Exception {
+    void given_noUser_when_deleteUser_then_returnNotFound() throws Exception {
         given(userService.validateAndGetUserById(anyString())).willThrow(UserNotFoundException.class);
 
         ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID())

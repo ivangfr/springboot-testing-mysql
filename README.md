@@ -91,7 +91,7 @@ Data JPA tests may also inject a `TestEntityManager` bean, which provides an alt
 For example:
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class UserRepositoryTests {
 
@@ -110,15 +110,16 @@ public class UserRepositoryTests {
 In order to test the application services, we can use a something similar as shown bellow, as we create an instance of `UserServiceImpl` and mock the `userRepository` 
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class UserServiceImplTests {
 
     private UserService userService;
+    
+    @MockBean
     private UserRepository userRepository;
 
     @Before
     public void setUp() {
-        userRepository = mock(UserRepository.class);
         userService = new UserServiceImpl(userRepository);
     }
     
@@ -134,7 +135,7 @@ public class UserServiceImplTests {
 In the example bellow, you can see that we mocking the services (in this case `userService`) used by `UserController`.
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 public class UserControllerTests {
 
@@ -155,7 +156,7 @@ In the example bellow, it is used `JacksonTester`. However, `GsonTester`, `Jsonb
 Btw, I've tried to use all of them, but just `JacksonTester` worked easily and as expected.  
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @JsonTest
 public class MyJsonTests {
 
@@ -172,7 +173,7 @@ The main goal of the integration tests is, as its name suggests, to integrate th
 So, in order to have it, we can use the `@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)` annotation. What this annotation does is to start a full running server running in a random ports. Spring Boot also provides a `TestRestTemplate` facility, for example:
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RandomPortTestRestTemplateExampleTests {
 

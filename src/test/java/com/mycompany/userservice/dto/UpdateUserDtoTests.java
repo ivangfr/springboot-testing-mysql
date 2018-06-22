@@ -1,12 +1,12 @@
 package com.mycompany.userservice.dto;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUpdate
 import static com.mycompany.userservice.util.MyLocalDateHandler.fromStringToDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @JsonTest
 public class UpdateUserDtoTests {
 
@@ -22,7 +22,7 @@ public class UpdateUserDtoTests {
     private JacksonTester<UpdateUserDto> jacksonTester;
 
     @Test
-    public void testSerialize() throws IOException {
+    void testSerialize() throws IOException {
         UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan", "ivan@test", "01-01-2018");
 
         JsonContent<UpdateUserDto> jsonContent = jacksonTester.write(updateUserDto);
@@ -36,7 +36,7 @@ public class UpdateUserDtoTests {
     }
 
     @Test
-    public void testDeserialize() throws IOException {
+    void testDeserialize() throws IOException {
         String content = "{\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"01-01-2018\"}";
 
         UpdateUserDto updateUserDto = jacksonTester.parseObject(content);
