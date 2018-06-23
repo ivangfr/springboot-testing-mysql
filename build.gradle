@@ -34,7 +34,7 @@ dependencies {
     testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
 }
 
-// enable Junit5
+// enable JUnit 5
 
 test {
     useJUnitPlatform()
