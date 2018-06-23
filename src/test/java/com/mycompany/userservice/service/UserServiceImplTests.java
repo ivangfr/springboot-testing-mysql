@@ -35,7 +35,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_saveUser_then_returnUser() {
+    void given_validUser_when_saveUser_then_returnUser() {
         User user = getDefaultUser();
         given(userRepository.save(user)).willReturn(user);
 
@@ -67,7 +67,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_getUserById_then_returnUser() {
+    void given_existingUserId_when_getUserById_then_returnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserById(user.getId())).willReturn(user);
 
@@ -77,7 +77,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_getUserByUsername_then_returnUser() {
+    void given_existingUserUsername_when_getUserByUsername_then_returnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
@@ -87,7 +87,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_getUserByEmail_then_returnUser() {
+    void given_existingUserEmail_when_getUserByEmail_then_returnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserByEmail(user.getEmail())).willReturn(user);
 
@@ -97,7 +97,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_validateAndGetUserById_then_returnUser() throws UserNotFoundException {
+    void given_existingUserId_when_validateAndGetUserById_then_returnUser() throws UserNotFoundException {
         User user = getDefaultUser();
         given(userRepository.findUserById(user.getId())).willReturn(user);
 
@@ -107,7 +107,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingId_when_validateAndGetUserById_then_throwException() {
+    void given_nonExistingUserId_when_validateAndGetUserById_then_throwUserNotFoundException() {
         given(userRepository.findUserById(anyString())).willReturn(null);
 
         Throwable exception = assertThrows(UserNotFoundException.class, () -> {
@@ -117,7 +117,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_validateAndGetUserByUsername_then_returnUser() throws UserNotFoundException {
+    void given_existingUserUsername_when_validateAndGetUserByUsername_then_returnUser() throws UserNotFoundException {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
@@ -127,7 +127,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingUsername_when_validateAndGetUserByUsername_then_throwException() {
+    void given_nonExistingUserUsername_when_validateAndGetUserByUsername_then_throwUserNotFoundException() {
         given(userRepository.findUserByUsername(anyString())).willReturn(null);
 
         Throwable exception = assertThrows(UserNotFoundException.class, () -> {
@@ -137,7 +137,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUsername_when_validateUserExistsByUsername_then_throwException() {
+    void given_existingUserUsername_when_validateUserExistsByUsername_then_throwUserUsernameDuplicatedException() {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
@@ -148,7 +148,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingUsername_when_validateUserExistsByUsername_then_doNothing() throws UserUsernameDuplicatedException {
+    void given_nonExistingUserUsername_when_validateUserExistsByUsername_then_doNothing() throws UserUsernameDuplicatedException {
         String username = "ivan2";
         given(userRepository.findUserByUsername(username)).willReturn(null);
 
@@ -156,7 +156,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingEmail_when_validateUserExistsByEmail_then_throwException() {
+    void given_existingUserEmail_when_validateUserExistsByEmail_then_throwUserEmailDuplicatedException() {
         User user = getDefaultUser();
         given(userRepository.findUserByEmail(user.getEmail())).willReturn(user);
 
@@ -167,7 +167,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingEmail_when_validateUserExistsByEmail_then_doNothing() throws UserEmailDuplicatedException {
+    void given_nonExistingUserEmail_when_validateUserExistsByEmail_then_doNothing() throws UserEmailDuplicatedException {
         String email = "ivan2@test";
         given(userRepository.findUserByEmail(email)).willReturn(null);
 

@@ -57,7 +57,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_noUsers_when_getAllUsers_then_returnEmptyJsonArray() throws Exception {
+    void given_noUsers_when_getAllUsers_then_returnStatusOkAndEmptyJsonArray() throws Exception {
         given(userService.getAllUsers()).willReturn(new ArrayList<>());
 
         ResultActions resultActions = mockMvc.perform(get("/api/users")
@@ -70,7 +70,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_getAllUsers_then_returnJsonArrayWithOneUser() throws Exception {
+    void given_oneUser_when_getAllUsers_then_returnStatusOkAndJsonArrayWithOneUser() throws Exception {
         User user = getDefaultUser();
         List<User> users = Lists.newArrayList(user);
 
@@ -90,7 +90,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_nonExistingUsername_when_getUserByUsername_then_returnNotFound() throws Exception {
+    void given_nonExistingUserUsername_when_getUserByUsername_then_returnStatusNotFound() throws Exception {
         String username = "ivan2";
 
         given(userService.validateAndGetUserByUsername(username)).willThrow(UserNotFoundException.class);
@@ -103,7 +103,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_getUserByUsername_then_returnUserJson() throws Exception {
+    void given_existingUserUsername_when_getUserByUsername_then_returnStatusOkAndUserJson() throws Exception {
         User user = getDefaultUser();
 
         given(userService.validateAndGetUserByUsername(user.getUsername())).willReturn(user);
@@ -121,7 +121,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_existingUsername_when_createUserWithTheSameUsername_then_returnBadRequest() throws Exception {
+    void given_existingUserUsername_when_createUserInformingTheSameUsername_then_returnStatusBadRequest() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
 
         willThrow(UserUsernameDuplicatedException.class).given(userService).validateUserExistsByUsername(createUserDto.getUsername());
@@ -136,7 +136,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_existingEmail_when_createAnotherUserWithTheSameEmail_then_returnBadRequest() throws Exception {
+    void given_existingUserEmail_when_createUserInformingTheSameEmail_then_returnStatusBadRequest() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
 
         willDoNothing().given(userService).validateUserExistsByUsername(anyString());
@@ -152,7 +152,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_nonExistingUsernameAndEmail_when_createUser_then_returnUserJson() throws Exception {
+    void given_nonExistingUserUsernameAndEmail_when_createUser_then_returnStatusCreatedAndUserJson() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         User user = getDefaultUser();
 
@@ -175,7 +175,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_updateUserWithAlreadyExistingUsername_then_returnBadRequest() throws Exception {
+    void given_oneUser_when_updateUserWithAlreadyExistingUsername_then_returnStatusBadRequest() throws Exception {
         User user = getDefaultUser();
         String username = "ivan2";
         UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -194,7 +194,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_updateUserWithAlreadyExistingEmail_then_returnBadRequest() throws Exception {
+    void given_oneUser_when_updateUserWithAlreadyExistingEmail_then_returnStatusBadRequest() throws Exception {
         User user = getDefaultUser();
         String email = "ivan2@test";
         UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -213,7 +213,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_updateUserChangingAllFields_then_returnUserJsonWithAllFieldsChanged() throws Exception {
+    void given_oneUser_when_updateUserChangingAllFields_then_returnStatusOkAndUserJsonWithAllFieldsChanged() throws Exception {
         User user = getDefaultUser();
         UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan2", "ivan2@test", "02-02-2018");
 
@@ -237,7 +237,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_updateUserChangingJustUsernameField_then_returnUserJsonWithJustUsernameChanged() throws Exception {
+    void given_oneUser_when_updateUserChangingJustUsernameField_then_returnStatusOkAndUserJsonWithJustUsernameChanged() throws Exception {
         User user = getDefaultUser();
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setUsername("ivan2");
@@ -261,7 +261,8 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_updateUserWithSameUsernameAndEmailButDifferentBirthday_then_returnUserJsonWithJustBirthdayChanged() throws Exception {
+    void given_oneUser_when_updateUserWithSameUsernameAndEmailButDifferentBirthday_then_returnStatusOkAndUserJsonWithJustBirthdayChanged()
+            throws Exception {
         User user = getDefaultUser();
         UpdateUserDto updateUserDto = getAnUpdateUserDto(user.getUsername(), user.getEmail(), "02-02-2018");
 
@@ -283,7 +284,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_oneUser_when_deleteUser_then_returnOk() throws Exception {
+    void given_existingUserId_when_deleteUser_then_returnStatusOk() throws Exception {
         User user = getDefaultUser();
 
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
@@ -302,7 +303,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void given_noUser_when_deleteUser_then_returnNotFound() throws Exception {
+    void given_nonExistingUserId_when_deleteUser_then_returnStatusNotFound() throws Exception {
         given(userService.validateAndGetUserById(anyString())).willThrow(UserNotFoundException.class);
 
         ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID())
