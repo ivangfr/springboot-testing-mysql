@@ -1,11 +1,13 @@
 package com.mycompany.userservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.util.Date;
@@ -15,13 +17,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class CreateUserDto {
 
+    @ApiModelProperty(example = "ivan.franchin")
     @NotNull
+    @NotEmpty
     private String username;
 
+    @ApiModelProperty(example = "ivan.franchin@test.com")
     @NotNull
     @Email
     private String email;
 
+    @ApiModelProperty(example = "01-01-2001")
     @Past
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;

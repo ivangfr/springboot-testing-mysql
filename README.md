@@ -9,7 +9,7 @@ The goals of this project are:
 
 ## Running the application
 
-1. Inside `/springboot-testing-mysql/dev` folder run
+1. Inside `/springboot-testing-mysql` root folder run
 ```
 docker-compose up -d
 ```
@@ -23,7 +23,7 @@ docker-compose up -d
 docker-compose ps
 ```
 
-3. Inside `/springboot-testing-mysql/dev` folder, run the following script to initialize the MySQL database
+3. Inside `/springboot-testing-mysql` root folder, run the following script to initialize the MySQL database
 ```
 ./init-db.sh
 ```
@@ -56,7 +56,10 @@ gradle test integrationTest
 
 ## Using [`Postman`](https://www.getpostman.com) and [`Newman`](https://github.com/postmanlabs/newman) for testing
 
-- In the `/springboot-testing-mysql/postman` folder there is a predefined `Postman` testing collection for `user-service`. You can import and edit it in your `Postman`.
+- **P.S. The database must have the users table empty**
+
+- In the `/springboot-testing-mysql/postman` folder there is a predefined `Postman` testing collection for
+`user-service`. You can import and edit it in your `Postman`.
 
 - Export to `HOST_IP_ADDR` environment variable the ip address of your machine
 > the ip address can be obtained by executing `ifconfig` command on Mac/Linux terminal or `ipconfig` on Windows;
@@ -68,7 +71,7 @@ export HOST_IP_ADDR=...
 ```
 docker run -t --rm --name newman \
 -v $PWD/postman:/etc/newman \
-postman/newman_ubuntu1404:3.9.4 \
+postman/newman_ubuntu1404:4.2.2 \
 run UserService.postman_collection.json --global-var "USER_SERVICE_ADDR=$HOST_IP_ADDR"
 ```
 

@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles("dev")
 public class RandomPortTestRestTemplateTests {
 
@@ -57,6 +57,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity("/api/users", UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody()).hasSize(1);
         assertThat(responseEntity.getBody()[0].getId()).isEqualTo(user.getId());
         assertThat(responseEntity.getBody()[0].getUsername()).isEqualTo(user.getUsername());
@@ -74,6 +75,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity("/api/users/username/" + username, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
@@ -91,6 +93,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto> responseEntity = testRestTemplate.getForEntity("/api/users/username/" + user.getUsername(), UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(user.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
@@ -107,6 +110,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isNotEmpty();
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(createUserDto.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(createUserDto.getEmail());
@@ -122,6 +126,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
@@ -140,6 +145,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
@@ -158,6 +164,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isNotEmpty();
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(createUserDto.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(createUserDto.getEmail());
@@ -170,6 +177,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
@@ -192,20 +200,14 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Validation failed for object='createUserDto'. Error count: 1");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Validation failed for object='createUserDto'. Error count: 2");
         assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users");
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("BadRequest");
-        assertThat(responseEntity.getBody().getErrors()).hasSize(1);
-        assertThat(responseEntity.getBody().getErrors().get(0).getCodes()).contains("NotNull.createUserDto.username", "NotNull.username", "NotNull.java.lang.String", "NotNull");
-        assertThat(responseEntity.getBody().getErrors().get(0).getDefaultMessage()).isEqualTo("must not be null");
-        assertThat(responseEntity.getBody().getErrors().get(0).getObjectName()).isEqualTo("createUserDto");
-        assertThat(responseEntity.getBody().getErrors().get(0).getField()).isEqualTo("username");
-        assertThat(responseEntity.getBody().getErrors().get(0).getRejectedValue()).isNull();
-        assertThat(responseEntity.getBody().getErrors().get(0).isBindingFailure()).isFalse();
-        assertThat(responseEntity.getBody().getErrors().get(0).getCode()).isEqualTo("NotNull");
+        assertThat(responseEntity.getBody().getErrors()).hasSize(2);
     }
 
     /*
@@ -220,6 +222,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange("/api/users/" + id, HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
@@ -244,6 +247,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange("/api/users/" + user1.getId(), HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
@@ -268,6 +272,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange("/api/users/" + user1.getId(), HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
@@ -290,6 +295,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.PUT, requestUpdate, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(updateUserDto.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(updateUserDto.getEmail());
@@ -307,6 +313,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.PUT, requestUpdate, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(user.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
@@ -323,6 +330,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange("/api/users/" + id, HttpMethod.DELETE, null, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
@@ -340,6 +348,7 @@ public class RandomPortTestRestTemplateTests {
         ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.DELETE, null, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isEqualTo(user.getId());
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(user.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());

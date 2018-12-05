@@ -11,14 +11,18 @@ import com.mycompany.userservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +33,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-
     private final ModelMapper modelMapper;
 
     public UserController(UserService userService, ModelMapper modelMapper) {
@@ -37,8 +40,9 @@ public class UserController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users")
+    public List<UserDto> getAllUsers() {
         log.info("Get all users");
 
         List<UserDto> userDtos = new ArrayList<>();
@@ -46,20 +50,22 @@ public class UserController {
             userDtos.add(modelMapper.map(user, UserDto.class));
         }
 
-        return new ResponseEntity<>(userDtos, HttpStatus.OK);
+        return userDtos;
     }
 
-    @GetMapping(value = "/users/username/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) throws UserNotFoundException {
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/username/{username}")
+    public UserDto getUserByUsername(@PathVariable String username) throws UserNotFoundException {
         log.info("Get user with username '{}'", username);
 
         User user = userService.validateAndGetUserByUsername(username);
 
-        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
+        return modelMapper.map(user, UserDto.class);
     }
 
-    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserDto createUserDto)
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/users")
+    public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto)
             throws UserUsernameDuplicatedException, UserEmailDuplicatedException {
         log.info("Post request to create user {}", createUserDto);
 
@@ -72,11 +78,12 @@ public class UserController {
         user = userService.saveUser(user);
 
         log.info("CREATED {}", user);
-        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.CREATED);
+        return modelMapper.map(user, UserDto.class);
     }
 
-    @PutMapping(value = "/users/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserDto updateUserDto)
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/users/{id}")
+    public UserDto updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserDto updateUserDto)
             throws UserNotFoundException, UserUsernameDuplicatedException, UserEmailDuplicatedException {
         log.info("Put request to update user with id {}. New values: {}", id, updateUserDto);
 
@@ -98,28 +105,19 @@ public class UserController {
         user = userService.saveUser(user);
 
         log.info("UPDATED {}", user);
-        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
+        return modelMapper.map(user, UserDto.class);
     }
 
-    @DeleteMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> deleteUser(@PathVariable UUID id) throws UserNotFoundException {
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/users/{id}")
+    public UserDto deleteUser(@PathVariable UUID id) throws UserNotFoundException {
         log.info("Delete request to remove user with id {}", id);
 
         User user = userService.validateAndGetUserById(id.toString());
         userService.deleteUser(user);
 
         log.info("DELETED {}", user);
-        return new ResponseEntity<>(modelMapper.map(user, UserDto.class), HttpStatus.OK);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public void handleNotFoundException(Exception e, HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());
-    }
-
-    @ExceptionHandler({UserUsernameDuplicatedException.class, UserEmailDuplicatedException.class})
-    public void handleBadRequestException(Exception e, HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return modelMapper.map(user, UserDto.class);
     }
 
 }
