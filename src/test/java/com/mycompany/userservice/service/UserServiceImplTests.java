@@ -110,9 +110,7 @@ public class UserServiceImplTests {
     void given_nonExistingUserId_when_validateAndGetUserById_then_throwUserNotFoundException() {
         given(userRepository.findUserById(anyString())).willReturn(null);
 
-        Throwable exception = assertThrows(UserNotFoundException.class, () -> {
-            userService.validateAndGetUserById("xyz");
-        });
+        Throwable exception = assertThrows(UserNotFoundException.class, () -> userService.validateAndGetUserById("xyz"));
         assertThat("User with id 'xyz' doesn't exist.").isEqualTo(exception.getMessage());
     }
 
@@ -130,9 +128,7 @@ public class UserServiceImplTests {
     void given_nonExistingUserUsername_when_validateAndGetUserByUsername_then_throwUserNotFoundException() {
         given(userRepository.findUserByUsername(anyString())).willReturn(null);
 
-        Throwable exception = assertThrows(UserNotFoundException.class, () -> {
-            userService.validateAndGetUserByUsername("ivan");
-        });
+        Throwable exception = assertThrows(UserNotFoundException.class, () -> userService.validateAndGetUserByUsername("ivan"));
         assertThat("User with username 'ivan' doesn't exist.").isEqualTo(exception.getMessage());
     }
 
@@ -141,9 +137,7 @@ public class UserServiceImplTests {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
-        Throwable exception = assertThrows(UserUsernameDuplicatedException.class, () -> {
-            userService.validateUserExistsByUsername(user.getUsername());
-        });
+        Throwable exception = assertThrows(UserUsernameDuplicatedException.class, () -> userService.validateUserExistsByUsername(user.getUsername()));
         assertThat("User with username 'ivan' already exists.").isEqualTo(exception.getMessage());
     }
 
@@ -160,9 +154,7 @@ public class UserServiceImplTests {
         User user = getDefaultUser();
         given(userRepository.findUserByEmail(user.getEmail())).willReturn(user);
 
-        Throwable exception = assertThrows(UserEmailDuplicatedException.class, () -> {
-            userService.validateUserExistsByEmail(user.getEmail());
-        });
+        Throwable exception = assertThrows(UserEmailDuplicatedException.class, () -> userService.validateUserExistsByEmail(user.getEmail()));
         assertThat("User with email 'ivan@test' already exists.").isEqualTo(exception.getMessage());
     }
 

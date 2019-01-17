@@ -7,8 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.Date;
 
@@ -18,16 +17,15 @@ import java.util.Date;
 public class CreateUserDto {
 
     @ApiModelProperty(example = "ivan.franchin")
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private String username;
 
-    @ApiModelProperty(example = "ivan.franchin@test.com")
-    @NotNull
+    @ApiModelProperty(position = 2, example = "ivan.franchin@test.com")
+    @NotBlank
     @Email
     private String email;
 
-    @ApiModelProperty(example = "01-01-2001")
+    @ApiModelProperty(position = 3, example = "01-01-2001")
     @Past
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;

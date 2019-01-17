@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 public class UserRepositoryTests {
 
     @Autowired

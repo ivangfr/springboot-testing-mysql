@@ -26,6 +26,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -40,20 +41,16 @@ public class UserController {
         this.modelMapper = modelMapper;
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users")
     public List<UserDto> getAllUsers() {
         log.info("Get all users");
 
-        List<UserDto> userDtos = new ArrayList<>();
-        for (User user : userService.getAllUsers()) {
-            userDtos.add(modelMapper.map(user, UserDto.class));
-        }
-
-        return userDtos;
+        return userService.getAllUsers()
+                .stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/username/{username}")
     public UserDto getUserByUsername(@PathVariable String username) throws UserNotFoundException {
         log.info("Get user with username '{}'", username);
@@ -72,16 +69,14 @@ public class UserController {
         userService.validateUserExistsByUsername(createUserDto.getUsername());
         userService.validateUserExistsByEmail(createUserDto.getEmail());
 
-        UUID id = UUID.randomUUID();
         User user = modelMapper.map(createUserDto, User.class);
-        user.setId(id.toString());
+        user.setId(UUID.randomUUID().toString());
         user = userService.saveUser(user);
 
         log.info("CREATED {}", user);
         return modelMapper.map(user, UserDto.class);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/users/{id}")
     public UserDto updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserDto updateUserDto)
             throws UserNotFoundException, UserUsernameDuplicatedException, UserEmailDuplicatedException {
@@ -108,7 +103,6 @@ public class UserController {
         return modelMapper.map(user, UserDto.class);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/users/{id}")
     public UserDto deleteUser(@PathVariable UUID id) throws UserNotFoundException {
         log.info("Delete request to remove user with id {}", id);

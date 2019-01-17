@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 public class UserServiceApplicationTests {
 
     @Autowired

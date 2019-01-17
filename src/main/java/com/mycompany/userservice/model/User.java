@@ -3,24 +3,27 @@ package com.mycompany.userservice.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "users", indexes = {
-        @Index(name = "idxEmail", columnList = "email", unique = true),
-        @Index(name = "idxUsername", columnList = "username", unique = true)})
+@Table(name = "users")
 public class User {
 
     @Id
     private String id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private Date birthday;

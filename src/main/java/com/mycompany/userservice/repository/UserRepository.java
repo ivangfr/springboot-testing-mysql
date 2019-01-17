@@ -1,9 +1,9 @@
 package com.mycompany.userservice.repository;
 
 import com.mycompany.userservice.model.User;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, String> {
 
     User findUserById(String id);
 

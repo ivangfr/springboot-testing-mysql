@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 public class RandomPortTestRestTemplateTests {
 
     @Autowired
@@ -204,10 +204,10 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Validation failed for object='createUserDto'. Error count: 2");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Validation failed for object='createUserDto'. Error count: 1");
         assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users");
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("BadRequest");
-        assertThat(responseEntity.getBody().getErrors()).hasSize(2);
+        assertThat(responseEntity.getBody().getErrors()).hasSize(1);
     }
 
     /*

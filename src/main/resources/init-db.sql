@@ -8,6 +8,6 @@ CREATE TABLE `users` (
   `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `username` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idxEmail` (`email`),
-  UNIQUE KEY `idxUsername` (`username`)
+  UNIQUE KEY `UK_email` (`email`),
+  UNIQUE KEY `UK_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
