@@ -27,16 +27,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.mycompany.userservice.helper.UserServiceTestHelper.*;
+import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUpdateUserDto;
+import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultCreateUserDto;
+import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
 import static com.mycompany.userservice.util.MyLocalDateHandler.PATTERN;
 import static com.mycompany.userservice.util.MyLocalDateHandler.fromDateToString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.BDDMockito.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
