@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
 	id 'idea'
-	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'org.springframework.boot' version '2.1.7.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'com.avast.gradle.docker-compose' version "0.9.4"
 }
@@ -15,9 +15,9 @@ repositories {
 }
 
 ext {
-	lombokVersion = '1.18.8'
-	springfoxSwaggerVersion = '2.9.2'
-	modelMapperVersion = '2.3.5'
+	set('lombokVersion', '1.18.8')
+	set('springfoxSwaggerVersion', '2.9.2')
+    set('modelMapperVersion', '2.3.5')
 }
 
 // enable JUnit 5
@@ -82,7 +82,9 @@ dependencies {
 	compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
 	compile "org.modelmapper:modelmapper:${modelMapperVersion}"
 	runtime 'mysql:mysql-connector-java'
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'junit', module: 'junit'
+	}
 	testCompile 'org.junit.jupiter:junit-jupiter-api'
 	testRuntime 'org.junit.jupiter:junit-jupiter-engine'
 }

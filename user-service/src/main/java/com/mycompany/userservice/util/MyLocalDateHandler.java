@@ -8,6 +8,9 @@ import java.util.Date;
 
 public class MyLocalDateHandler {
 
+    private MyLocalDateHandler() {
+    }
+
     public static final String PATTERN = "dd-MM-yyyy";
     public static final String ZONE_ID = "UTC";
 

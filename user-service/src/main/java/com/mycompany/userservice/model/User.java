@@ -7,8 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Data
@@ -29,12 +28,10 @@ public class User {
     private Date birthday;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdOn;
+    private ZonedDateTime createdOn;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedOn;
+    private ZonedDateTime updatedOn;
 
     public User(String id, String username, String email, Date birthday) {
         this.id = id;

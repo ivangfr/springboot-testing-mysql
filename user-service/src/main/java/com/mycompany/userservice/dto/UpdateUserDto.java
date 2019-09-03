@@ -18,11 +18,11 @@ public class UpdateUserDto {
     @ApiModelProperty(example = "ivan2.franchin")
     private String username;
 
-    @ApiModelProperty(position = 2, example = "ivan2.franchin@test.com")
+    @ApiModelProperty(position = 1, example = "ivan2.franchin@test.com")
     @Email
     private String email;
 
-    @ApiModelProperty(position = 3, example = "02-02-2002")
+    @ApiModelProperty(position = 2, example = "02-02-2002")
     @Past
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;

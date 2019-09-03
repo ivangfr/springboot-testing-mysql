@@ -11,6 +11,9 @@ import static com.mycompany.userservice.util.MyLocalDateHandler.fromStringToDate
 
 public class UserServiceTestHelper {
 
+    private UserServiceTestHelper() {
+    }
+
     /* Default User Values */
 
     private static final String ID = "d8bcc132-c704-4d21-b05f-9557d7fc3d91";

@@ -20,12 +20,12 @@ public class CreateUserDto {
     @NotBlank
     private String username;
 
-    @ApiModelProperty(position = 2, example = "ivan.franchin@test.com")
+    @ApiModelProperty(position = 1, example = "ivan.franchin@test.com")
     @NotBlank
     @Email
     private String email;
 
-    @ApiModelProperty(position = 3, example = "01-01-2001")
+    @ApiModelProperty(position = 2, example = "01-01-2001")
     @Past
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date birthday;
