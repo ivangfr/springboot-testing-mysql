@@ -2,9 +2,10 @@
 
 The goals of this project are:
 
-- Create a simple REST API to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
-- Explore the utilities and annotations that Spring Boot provides when testing applications.
-- Testing with [Postman](https://www.getpostman.com) and [Newman](https://github.com/postmanlabs/newman)
+- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) REST API to
+manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
+- Explore the utilities and annotations that `Spring Boot` provides when testing applications.
+- Testing with [`Postman`](https://www.getpostman.com) and [`Newman`](https://github.com/postmanlabs/newman)
 
 ## Start environment
 
@@ -28,7 +29,7 @@ following script
 
 Still inside `springboot-testing-mysql` root folder, run the command to start the application
 ```
-./gradlew user-service:clean bootRun
+./gradlew user-service:clean user-service:bootRun
 ```
 
 The `user-service` endpoints can be access using Swagger website: http://localhost:8080/swagger-ui.html
@@ -66,7 +67,7 @@ docker-compose down -v
 In a terminal and inside `springboot-testing-mysql` root folder, run the command below to run unit and integration
 tests
 ```
-./gradlew user-service:cleanTest test integrationTest
+./gradlew user-service:cleanTest user-service:test user-service:integrationTest
 ```
 > We are using a Gradle plugin that uses docker-compose to start a MySQL container that is required by the tests.
 

@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
 	id 'idea'
-	id 'org.springframework.boot' version '2.1.7.RELEASE'
+	id 'org.springframework.boot' version '2.2.0.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'com.avast.gradle.docker-compose' version "0.9.4"
 }
@@ -10,20 +10,25 @@ group = 'com.mycompany'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	integrationTestImplementation{
+		extendsFrom testImplementation
+	}
+	integrationTestRuntime{
+		extendsFrom testRuntime
+	}
+}
+
 repositories {
 	mavenCentral()
 }
 
 ext {
-	set('lombokVersion', '1.18.8')
 	set('springfoxSwaggerVersion', '2.9.2')
     set('modelMapperVersion', '2.3.5')
-}
-
-// enable JUnit 5
-
-test {
-	useJUnitPlatform()
 }
 
 // adding docker-compose plugin
@@ -53,11 +58,6 @@ idea {
 	}
 }
 
-configurations {
-	integrationTestCompile.extendsFrom testCompile
-	integrationTestRuntime.extendsFrom testRuntime
-}
-
 task integrationTest(type: Test) {
 	group 'springboot-testing'
 	description 'Runs the integration tests'
@@ -69,24 +69,29 @@ task integrationTest(type: Test) {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	// -- Lombok & Gradle 5
-	compile "org.projectlombok:lombok:${lombokVersion}"
-	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-	testCompile "org.projectlombok:lombok:${lombokVersion}"
-	integrationTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-	// --
-	compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-	compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
-	compile "org.modelmapper:modelmapper:${modelMapperVersion}"
-	runtime 'mysql:mysql-connector-java'
-	testCompile('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'junit', module: 'junit'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	implementation "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+	implementation "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+	implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	testCompile 'org.junit.jupiter:junit-jupiter-api'
-	testRuntime 'org.junit.jupiter:junit-jupiter-engine'
+
+	integrationTestAnnotationProcessor 'org.projectlombok:lombok'
+	integrationTestCompileOnly 'org.projectlombok:lombok'
+	integrationTestRuntimeOnly 'mysql:mysql-connector-java'
+}
+
+test {
+	useJUnitPlatform()
 }
 
 check.dependsOn integrationTest

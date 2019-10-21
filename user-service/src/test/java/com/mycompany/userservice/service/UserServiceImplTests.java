@@ -35,7 +35,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_validUser_when_saveUser_then_returnUser() {
+    void givenValidUserWhenSaveUserThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.save(user)).willReturn(user);
 
@@ -45,7 +45,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_noUser_when_getAllUsers_then_returnEmptyList() {
+    void givenNoUserWhenGetAllUsersThenReturnEmptyList() {
         given(userRepository.findAll()).willReturn(new ArrayList<>());
 
         List<User> usersFound = userService.getAllUsers();
@@ -54,7 +54,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_oneUser_when_getAllUsers_then_returnListWithOneUser() {
+    void givenOneUserWhenGetAllUsersThenReturnListWithOneUser() {
         User user = getDefaultUser();
         List<User> users = Lists.newArrayList(user);
 
@@ -67,7 +67,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserId_when_getUserById_then_returnUser() {
+    void givenExistingUserIdWhenGetUserByIdThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserById(user.getId())).willReturn(user);
 
@@ -77,7 +77,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserUsername_when_getUserByUsername_then_returnUser() {
+    void givenExistingUserUsernameWhenGetUserByUsernameThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
@@ -87,7 +87,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserEmail_when_getUserByEmail_then_returnUser() {
+    void givenExistingUserEmailWhenGetUserByEmailThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserByEmail(user.getEmail())).willReturn(user);
 
@@ -97,7 +97,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserId_when_validateAndGetUserById_then_returnUser() throws UserNotFoundException {
+    void givenExistingUserIdWhenValidateAndGetUserByIdThenReturnUser() throws UserNotFoundException {
         User user = getDefaultUser();
         given(userRepository.findUserById(user.getId())).willReturn(user);
 
@@ -107,7 +107,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingUserId_when_validateAndGetUserById_then_throwUserNotFoundException() {
+    void givenNonExistingUserIdWhenValidateAndGetUserByIdThenThrowUserNotFoundException() {
         given(userRepository.findUserById(anyString())).willReturn(null);
 
         Throwable exception = assertThrows(UserNotFoundException.class, () -> userService.validateAndGetUserById("xyz"));
@@ -115,7 +115,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserUsername_when_validateAndGetUserByUsername_then_returnUser() throws UserNotFoundException {
+    void givenExistingUserUsernameWhenValidateAndGetUserByUsernameThenReturnUser() throws UserNotFoundException {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
@@ -125,7 +125,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingUserUsername_when_validateAndGetUserByUsername_then_throwUserNotFoundException() {
+    void givenNonExistingUserUsernameWhenValidateAndGetUserByUsernameThenThrowUserNotFoundException() {
         given(userRepository.findUserByUsername(anyString())).willReturn(null);
 
         Throwable exception = assertThrows(UserNotFoundException.class, () -> userService.validateAndGetUserByUsername("ivan"));
@@ -133,7 +133,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserUsername_when_validateUserExistsByUsername_then_throwUserUsernameDuplicatedException() {
+    void givenExistingUserUsernameWhenValidateUserExistsByUsernameThenThrowUserUsernameDuplicatedException() {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(user);
 
@@ -142,7 +142,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingUserUsername_when_validateUserExistsByUsername_then_doNothing() throws UserUsernameDuplicatedException {
+    void givenNonExistingUserUsernameWhenValidateUserExistsByUsernameThenDoNothing() throws UserUsernameDuplicatedException {
         String username = "ivan2";
         given(userRepository.findUserByUsername(username)).willReturn(null);
 
@@ -150,7 +150,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_existingUserEmail_when_validateUserExistsByEmail_then_throwUserEmailDuplicatedException() {
+    void givenExistingUserEmailWhenValidateUserExistsByEmailThenThrowUserEmailDuplicatedException() {
         User user = getDefaultUser();
         given(userRepository.findUserByEmail(user.getEmail())).willReturn(user);
 
@@ -159,7 +159,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void given_nonExistingUserEmail_when_validateUserExistsByEmail_then_doNothing() throws UserEmailDuplicatedException {
+    void givenNonExistingUserEmailWhenValidateUserExistsByEmailThenDoNothing() throws UserEmailDuplicatedException {
         String email = "ivan2@test";
         given(userRepository.findUserByEmail(email)).willReturn(null);
 

@@ -30,7 +30,7 @@ public class UserRepositoryTests {
     private UserRepository userRepository;
 
     @Test
-    void given_existingUserUsername_when_findUserByUsername_then_returnUser() {
+    void givenExistingUserUsernameWhenFindUserByUsernameThenReturnUser() {
         User user = getDefaultUser();
         entityManager.persist(user);
 
@@ -40,14 +40,14 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void given_nonExistingUserUsername_when_findUserByUsernameUsingNonExistingUsername_then_returnNull() {
+    void givenNonExistingUserUsernameWhenFindUserByUsernameUsingNonExistingUsernameThenReturnNull() {
         User userFound = userRepository.findUserByUsername("ivan2");
 
         assertThat(userFound).isNull();
     }
 
     @Test
-    void given_existingUserId_when_findUserById_then_returnUser() {
+    void givenExistingUserIdWhenFindUserByIdThenReturnUser() {
         User user = getDefaultUser();
         entityManager.persist(user);
 
@@ -57,13 +57,13 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void given_nonExistingUserId_when_findUserByIdUsingNonExistingId_then_returnNull() {
+    void givenNonExistingUserIdWhenFindUserByIdUsingNonExistingIdThenReturnNull() {
         User userFound = userRepository.findUserById("xyz");
         assertThat(userFound).isNull();
     }
 
     @Test
-    void given_existingUserEmail_when_findUserByEmail_then_returnUser() {
+    void givenExistingUserEmailWhenFindUserByEmailThenReturnUser() {
         User user = getDefaultUser();
         entityManager.persist(user);
 
@@ -73,7 +73,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    void given_nonExistingUserEmail_when_findUserByEmailUsingNonExistingEmail_then_returnNull() {
+    void givenNonExistingUserEmailWhenFindUserByEmailUsingNonExistingEmailThenReturnNull() {
         User userFound = userRepository.findUserByEmail("ivan2@test");
         assertThat(userFound).isNull();
     }
