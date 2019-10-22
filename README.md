@@ -50,9 +50,9 @@ export HOST_IP_ADDR=...
 - Inside `springboot-testing-mysql` root folder, execute the following command to run `Newman` docker container
 ```
 docker run -t --rm --name newman \
--v $PWD/postman:/etc/newman \
-postman/newman_ubuntu1404:4.5.1 \
-run UserService.postman_collection.json --global-var "USER_SERVICE_ADDR=$HOST_IP_ADDR"
+  -v $PWD/postman:/etc/newman \
+  postman/newman_ubuntu1404:4.5.5 \
+  run UserService.postman_collection.json --global-var "USER_SERVICE_ADDR=$HOST_IP_ADDR"
 ```
 
 ## Shutdown

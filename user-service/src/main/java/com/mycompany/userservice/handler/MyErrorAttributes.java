@@ -1,8 +1,7 @@
 package com.mycompany.userservice.handler;
 
-import com.mycompany.userservice.exception.UserEmailDuplicatedException;
+import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
-import com.mycompany.userservice.exception.UserUsernameDuplicatedException;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
@@ -18,8 +17,7 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
     }
 
     @Override
-    public Map<String, Object> getErrorAttributes(WebRequest webRequest,
-                                                  boolean includeStackTrace) {
+    public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
         Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
 
         String exceptionClassName = (String) errorAttributes.get("exception");
@@ -38,8 +36,7 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
 
         static {
             map.put(UserNotFoundException.class.getName(), ErrorCode.USER_NOT_FOUND.getDescription());
-            map.put(UserUsernameDuplicatedException.class.getName(), ErrorCode.USER_USERNAME_DUPLICATED.getDescription());
-            map.put(UserEmailDuplicatedException.class.getName(), ErrorCode.USER_EMAIL_DUPLICATED.getDescription());
+            map.put(UserDataDuplicatedException.class.getName(), ErrorCode.USER_DATA_DUPLICATED.getDescription());
         }
 
         static String getErrorCode(String className) {
@@ -49,8 +46,7 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
 
     private enum ErrorCode {
         USER_NOT_FOUND("UserNotFound"),
-        USER_USERNAME_DUPLICATED("UserUsernameDuplicated"),
-        USER_EMAIL_DUPLICATED("UserEmailDuplicated");
+        USER_DATA_DUPLICATED("UserDataDuplicated");
 
         private final String description;
 

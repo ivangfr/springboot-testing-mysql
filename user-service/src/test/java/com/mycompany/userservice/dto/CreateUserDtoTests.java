@@ -9,9 +9,9 @@ import org.springframework.boot.test.json.JsonContent;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnCreateUserDto;
-import static com.mycompany.userservice.util.MyLocalDateHandler.fromStringToDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -23,7 +23,7 @@ public class CreateUserDtoTests {
 
     @Test
     void testSerialize() throws IOException {
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan", "ivan@test", "01-01-2018");
+        CreateUserDto createUserDto = getAnCreateUserDto("ivan", "ivan@test", "2018-01-01");
 
         JsonContent<CreateUserDto> jsonContent = jacksonTester.write(createUserDto);
 
@@ -32,18 +32,18 @@ public class CreateUserDtoTests {
         assertThat(jsonContent).hasJsonPathStringValue("@.email");
         assertThat(jsonContent).extractingJsonPathStringValue("@.email").isEqualTo("ivan@test");
         assertThat(jsonContent).hasJsonPathStringValue("@.birthday");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.birthday").isEqualTo("01-01-2018");
+        assertThat(jsonContent).extractingJsonPathStringValue("@.birthday").isEqualTo("2018-01-01");
     }
 
     @Test
     void testDeserialize() throws IOException {
-        String content = "{\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"01-01-2018\"}";
+        String content = "{\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
 
         CreateUserDto createUserDto = jacksonTester.parseObject(content);
 
         assertThat(createUserDto.getUsername()).isEqualTo("ivan");
         assertThat(createUserDto.getEmail()).isEqualTo("ivan@test");
-        assertThat(createUserDto.getBirthday()).isEqualTo(fromStringToDate("01-01-2018"));
+        assertThat(createUserDto.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
     }
 
 }

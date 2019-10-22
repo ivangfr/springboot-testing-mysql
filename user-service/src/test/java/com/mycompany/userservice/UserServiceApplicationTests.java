@@ -27,7 +27,7 @@ public class UserServiceApplicationTests {
     private UserRepository userRepository;
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         assertThat(userController).isNotNull();
         assertThat(userService).isNotNull();
         assertThat(userRepository).isNotNull();

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Past;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -22,9 +22,9 @@ public class UpdateUserDto {
     @Email
     private String email;
 
-    @ApiModelProperty(position = 2, example = "02-02-2002")
+    @ApiModelProperty(position = 2, example = "2002-02-02")
     @Past
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date birthday;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
 
 }

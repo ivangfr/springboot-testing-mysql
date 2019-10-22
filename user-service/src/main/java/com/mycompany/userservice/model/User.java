@@ -7,25 +7,29 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_email", columnNames = "email"),
+        @UniqueConstraint(name = "UK_username", columnNames = "username")
+})
 public class User {
 
     @Id
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private ZonedDateTime createdOn;
@@ -33,7 +37,7 @@ public class User {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP", updatable = false)
     private ZonedDateTime updatedOn;
 
-    public User(String id, String username, String email, Date birthday) {
+    public User(String id, String username, String email, LocalDate birthday) {
         this.id = id;
         this.username = username;
         this.email = email;

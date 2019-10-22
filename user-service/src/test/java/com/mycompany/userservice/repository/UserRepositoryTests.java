@@ -13,6 +13,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,16 +36,16 @@ public class UserRepositoryTests {
         User user = getDefaultUser();
         entityManager.persist(user);
 
-        User userFound = userRepository.findUserByUsername(user.getUsername());
+        Optional<User> userOptional = userRepository.findUserByUsername(user.getUsername());
 
-        assertThat(userFound).isEqualToComparingFieldByField(user);
+        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional.get()).isEqualToComparingFieldByField(user);
     }
 
     @Test
-    void givenNonExistingUserUsernameWhenFindUserByUsernameUsingNonExistingUsernameThenReturnNull() {
-        User userFound = userRepository.findUserByUsername("ivan2");
-
-        assertThat(userFound).isNull();
+    void givenNonExistingUserUsernameWhenFindUserByUsernameUsingNonExistingUsernameThenReturnOptionalEmpty() {
+        Optional<User> userOptional = userRepository.findUserByUsername("ivan2");
+        assertThat(userOptional.isPresent()).isFalse();
     }
 
     @Test
@@ -51,15 +53,16 @@ public class UserRepositoryTests {
         User user = getDefaultUser();
         entityManager.persist(user);
 
-        User userFound = userRepository.findUserById(user.getId());
+        Optional<User> userOptional = userRepository.findUserById(user.getId());
 
-        assertThat(userFound).isEqualToComparingFieldByField(user);
+        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional.get()).isEqualToComparingFieldByField(user);
     }
 
     @Test
-    void givenNonExistingUserIdWhenFindUserByIdUsingNonExistingIdThenReturnNull() {
-        User userFound = userRepository.findUserById("xyz");
-        assertThat(userFound).isNull();
+    void givenNonExistingUserIdWhenFindUserByIdUsingNonExistingIdThenReturnOptionalEmpty() {
+        Optional<User> userOptional = userRepository.findUserById("xyz");
+        assertThat(userOptional.isPresent()).isFalse();
     }
 
     @Test
@@ -67,15 +70,16 @@ public class UserRepositoryTests {
         User user = getDefaultUser();
         entityManager.persist(user);
 
-        User userFound = userRepository.findUserByEmail(user.getEmail());
+        Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
-        assertThat(userFound).isEqualToComparingFieldByField(user);
+        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional.get()).isEqualToComparingFieldByField(user);
     }
 
     @Test
-    void givenNonExistingUserEmailWhenFindUserByEmailUsingNonExistingEmailThenReturnNull() {
-        User userFound = userRepository.findUserByEmail("ivan2@test");
-        assertThat(userFound).isNull();
+    void givenNonExistingUserEmailWhenFindUserByEmailUsingNonExistingEmailThenReturnOptionalEmpty() {
+        Optional<User> userOptional = userRepository.findUserByEmail("ivan2@test");
+        assertThat(userOptional.isPresent()).isFalse();
     }
 
 }

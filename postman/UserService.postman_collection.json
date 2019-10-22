@@ -12,7 +12,6 @@
 					"listen": "test",
 					"script": {
 						"id": "efcf59de-3047-4453-bb3d-22f87436ae64",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -22,22 +21,22 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"pm.test(\"Response is an empty array\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.length).to.eql(0);",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users",
 					"protocol": "http",
@@ -60,7 +59,6 @@
 					"listen": "test",
 					"script": {
 						"id": "db5fa6e5-0fe7-4c40-9f0c-da33c1c9c753",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
@@ -70,8 +68,8 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"var user_schema = {",
@@ -98,11 +96,12 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.username).to.eql(\"ivan\");",
 							"    pm.expect(jsonData.email).to.eql(\"ivan@test.com\");",
-							"    pm.expect(jsonData.birthday).to.eql(\"01-01-1999\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"1999-01-01\");",
 							"    pm.globals.set(\"user_id\", jsonData.id);",
 							"    pm.globals.set(\"user_username\", jsonData.username);",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -116,7 +115,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"birthday\": \"01-01-1999\",\n  \"email\": \"ivan@test.com\",\n  \"username\": \"ivan\"\n}"
+					"raw": "{\n  \"birthday\": \"1999-01-01\",\n  \"email\": \"ivan@test.com\",\n  \"username\": \"ivan\"\n}"
 				},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users",
@@ -140,7 +139,6 @@
 					"listen": "test",
 					"script": {
 						"id": "5cee29db-de8a-417a-9ac9-c4b4ec563186",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -150,8 +148,8 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"var user_schema = {",
@@ -179,16 +177,16 @@
 							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"user_id\"));",
 							"    pm.expect(jsonData.username).to.eql(\"ivan\");",
 							"    pm.expect(jsonData.email).to.eql(\"ivan@test.com\");",
-							"    pm.expect(jsonData.birthday).to.eql(\"01-01-1999\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"1999-01-01\");",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/username/{{user_username}}",
 					"protocol": "http",
@@ -213,7 +211,6 @@
 					"listen": "test",
 					"script": {
 						"id": "41013be6-554b-46d9-b510-6b998c590a06",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -223,8 +220,8 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"var array_user_schema = {",
@@ -257,16 +254,16 @@
 							"    pm.expect(jsonData[0].id).to.eql(pm.globals.get(\"user_id\"));",
 							"    pm.expect(jsonData[0].username).to.eql(\"ivan\");",
 							"    pm.expect(jsonData[0].email).to.eql(\"ivan@test.com\");",
-							"    pm.expect(jsonData[0].birthday).to.eql(\"01-01-1999\");",
+							"    pm.expect(jsonData[0].birthday).to.eql(\"1999-01-01\");",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users",
 					"protocol": "http",
@@ -289,7 +286,6 @@
 					"listen": "test",
 					"script": {
 						"id": "e9b24740-b9f2-4046-89e5-389bd3f6c875",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -299,17 +295,18 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"pm.test(\"Response has User Data\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.username).to.eql(\"ivan2\");",
 							"    pm.expect(jsonData.email).to.eql(\"ivan2@test.com\");",
-							"    pm.expect(jsonData.birthday).to.eql(\"02-02-1999\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"1999-02-02\");",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
@@ -323,7 +320,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"birthday\": \"02-02-1999\",\n  \"email\": \"ivan2@test.com\",\n  \"username\": \"ivan2\"\n}"
+					"raw": "{\n  \"birthday\": \"1999-02-02\",\n  \"email\": \"ivan2@test.com\",\n  \"username\": \"ivan2\"\n}"
 				},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/{{user_id}}",
@@ -348,7 +345,6 @@
 					"listen": "test",
 					"script": {
 						"id": "51ce2e39-cbe0-4003-8cd3-ced08cf956e8",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -358,8 +354,8 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"pm.test(\"Response has User Data\", function () {",
@@ -367,16 +363,20 @@
 							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"user_id\"));",
 							"    pm.expect(jsonData.username).to.eql(\"ivan2\");",
 							"    pm.expect(jsonData.email).to.eql(\"ivan2@test.com\");",
-							"    pm.expect(jsonData.birthday).to.eql(\"02-02-1999\");",
+							"    pm.expect(jsonData.birthday).to.eql(\"1999-02-02\");",
 							"});"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/{{user_id}}",
 					"protocol": "http",
@@ -400,7 +400,6 @@
 					"listen": "test",
 					"script": {
 						"id": "a64bea95-ded3-4b1e-a959-322d4c1ea3eb",
-						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Status code is 404\", function () {",
 							"    pm.response.to.have.status(404);",
@@ -410,8 +409,8 @@
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
 							"var error_schema = {",
@@ -447,14 +446,14 @@
 							"",
 							"pm.globals.unset(\"user_id\");",
 							"pm.globals.unset(\"user_username\");"
-						]
+						],
+						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
 				"url": {
 					"raw": "http://{{USER_SERVICE_ADDR}}:8080/api/users/username/{{user_name}}",
 					"protocol": "http",

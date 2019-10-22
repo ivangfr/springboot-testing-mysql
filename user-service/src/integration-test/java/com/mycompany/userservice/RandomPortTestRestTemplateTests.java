@@ -20,6 +20,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnCreateUserDto;
@@ -127,7 +128,7 @@ public class RandomPortTestRestTemplateTests {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        CreateUserDto createUserDto = getAnCreateUserDto(user.getUsername(), "ivan2@test", "02-02-2018");
+        CreateUserDto createUserDto = getAnCreateUserDto(user.getUsername(), "ivan2@test", "2018-02-02");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -135,9 +136,9 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with username '" + user.getUsername() + "' already exists.");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("The username and/or email informed already exists.");
         assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users");
-        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserUsernameDuplicated");
+        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserDataDuplicated");
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
@@ -146,7 +147,7 @@ public class RandomPortTestRestTemplateTests {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan2", user.getEmail(), "02-02-2018");
+        CreateUserDto createUserDto = getAnCreateUserDto("ivan2", user.getEmail(), "2018-02-02");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -154,9 +155,9 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with email '" + user.getEmail() + "' already exists.");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("The username and/or email informed already exists.");
         assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users");
-        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserEmailDuplicated");
+        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserDataDuplicated");
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
@@ -165,7 +166,7 @@ public class RandomPortTestRestTemplateTests {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan2", "ivan2@test", "02-02-2018");
+        CreateUserDto createUserDto = getAnCreateUserDto("ivan2", "ivan2@test", "2018-02-02");
         ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -178,7 +179,7 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenUserWithInvalidEmailFormatWhenCreateUserThenReturnStatusBadRequest() {
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan", "ivan", "01-01-2018");
+        CreateUserDto createUserDto = getAnCreateUserDto("ivan", "ivan", "2018-01-01");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -201,7 +202,7 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenUserWithoutUsernameWhenCreateUserThenReturnStatusBadRequest() {
-        CreateUserDto createUserDto = getAnCreateUserDto(null, "ivan@test", "01-01-2018");
+        CreateUserDto createUserDto = getAnCreateUserDto(null, "ivan@test", "2018-01-01");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity("/api/users", createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -242,7 +243,7 @@ public class RandomPortTestRestTemplateTests {
         User user1 = getDefaultUser();
         userRepository.save(user1);
 
-        User user2 = getAnUser(UUID.randomUUID().toString(), "ivan2", "ivan2@test", "02-02-2018");
+        User user2 = getAnUser(UUID.randomUUID().toString(), "ivan2", "ivan2@test", "2018-02-02");
         userRepository.save(user2);
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -256,9 +257,9 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with username '" + user2.getUsername() + "' already exists.");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("The username and/or email informed already exists.");
         assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users/" + user1.getId());
-        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserUsernameDuplicated");
+        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserDataDuplicated");
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
@@ -267,7 +268,7 @@ public class RandomPortTestRestTemplateTests {
         User user1 = getDefaultUser();
         userRepository.save(user1);
 
-        User user2 = getAnUser(UUID.randomUUID().toString(), "ivan2", "ivan2@test", "02-02-2018");
+        User user2 = getAnUser(UUID.randomUUID().toString(), "ivan2", "ivan2@test", "2018-02-02");
         userRepository.save(user2);
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
@@ -281,9 +282,9 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Bad Request");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("User with email '" + user2.getEmail() + "' already exists.");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("The username and/or email informed already exists.");
         assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/users/" + user1.getId());
-        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserEmailDuplicated");
+        assertThat(responseEntity.getBody().getErrorCode()).isEqualTo("UserDataDuplicated");
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
@@ -312,7 +313,7 @@ public class RandomPortTestRestTemplateTests {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan", "ivan@test", "02-02-2018");
+        UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan", "ivan@test", "2018-02-02");
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
         ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange("/api/users/" + user.getId(), HttpMethod.PUT, requestUpdate, UserDto.class);
@@ -359,9 +360,9 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
         assertThat(responseEntity.getBody().getBirthday()).isEqualTo(user.getBirthday());
 
-        User userFound = userRepository.findUserById(user.getId());
+        Optional<User> userOptional = userRepository.findUserById(user.getId());
 
-        assertThat(userFound).isNull();
+        assertThat(userOptional.isPresent()).isFalse();
     }
 
 }
