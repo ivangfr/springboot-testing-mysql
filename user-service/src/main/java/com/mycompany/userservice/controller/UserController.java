@@ -5,10 +5,10 @@ import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
+import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,49 +31,49 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
-        this.modelMapper = modelMapper;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/users")
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers()
                 .stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/users/username/{username}")
     public UserDto getUserByUsername(@PathVariable String username) throws UserNotFoundException {
         User user = userService.validateAndGetUserByUsername(username);
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/users")
     public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) throws UserDataDuplicatedException {
-        User user = modelMapper.map(createUserDto, User.class);
+        User user = userMapper.toUser(createUserDto);
         user.setId(UUID.randomUUID().toString());
         user = userService.saveUser(user);
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
     @PutMapping("/users/{id}")
     public UserDto updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException, UserDataDuplicatedException {
         User user = userService.validateAndGetUserById(id.toString());
-        modelMapper.map(updateUserDto, user);
+        userMapper.updateUserFromDto(updateUserDto, user);
         user = userService.saveUser(user);
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
     @DeleteMapping("/users/{id}")
     public UserDto deleteUser(@PathVariable UUID id) throws UserNotFoundException {
         User user = userService.validateAndGetUserById(id.toString());
         userService.deleteUser(user);
-        return modelMapper.map(user, UserDto.class);
+        return userMapper.toUserDto(user);
     }
 
 }

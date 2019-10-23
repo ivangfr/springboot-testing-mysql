@@ -1,16 +1,15 @@
 package com.mycompany.userservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.Lists;
-import com.mycompany.userservice.config.ModelMapperConfig;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
+import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
+import com.mycompany.userservice.mapper.UserMapperImpl;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import java.util.UUID;
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUpdateUserDto;
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultCreateUserDto;
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
+import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUserDto;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -48,22 +48,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
-@Import(ModelMapperConfig.class)
+@Import(UserMapperImpl.class) // <-- if this class is missing, run: ./gradlew user-service:assemble
 public class UserControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private UserService userService;
-
-    private static ObjectMapper objectMapper;
-
-    @BeforeAll
-    static void setUp() {
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-    }
 
     @Test
     void givenNoUsersWhenGetAllUsersThenReturnStatusOkAndEmptyJsonArray() throws Exception {
@@ -163,8 +158,11 @@ public class UserControllerTests {
     void givenNonExistingUserUsernameAndEmailWhenCreateUserThenReturnStatusCreatedAndUserJson() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         User user = getDefaultUser();
+        UserDto userDto = getDefaultUserDto();
 
+//        given(userMapper.toUser(any(CreateUserDto.class))).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
+//        given(userMapper.toUserDto(any(User.class))).willReturn(userDto);
 
         ResultActions resultActions = mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
