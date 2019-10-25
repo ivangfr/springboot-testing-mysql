@@ -8,7 +8,6 @@ import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {

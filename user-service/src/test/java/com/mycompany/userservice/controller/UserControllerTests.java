@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
-import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.mapper.UserMapperImpl;
@@ -28,7 +27,6 @@ import java.util.UUID;
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUpdateUserDto;
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultCreateUserDto;
 import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUserDto;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -64,8 +62,7 @@ public class UserControllerTests {
     void givenNoUsersWhenGetAllUsersThenReturnStatusOkAndEmptyJsonArray() throws Exception {
         given(userService.getAllUsers()).willReturn(Collections.emptyList());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users")
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/users"))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -80,8 +77,7 @@ public class UserControllerTests {
 
         given(userService.getAllUsers()).willReturn(users);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users")
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/users"))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -99,8 +95,7 @@ public class UserControllerTests {
 
         given(userService.validateAndGetUserByUsername(username)).willThrow(UserNotFoundException.class);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/username/{username}", username)
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/users/username/{username}", username))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
@@ -112,8 +107,7 @@ public class UserControllerTests {
 
         given(userService.validateAndGetUserByUsername(user.getUsername())).willReturn(user);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/username/{username}", user.getUsername())
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/users/username/{username}", user.getUsername()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -132,7 +126,6 @@ public class UserControllerTests {
 
         ResultActions resultActions = mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDto)))
                 .andDo(print());
 
@@ -147,7 +140,6 @@ public class UserControllerTests {
 
         ResultActions resultActions = mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDto)))
                 .andDo(print());
 
@@ -158,15 +150,11 @@ public class UserControllerTests {
     void givenNonExistingUserUsernameAndEmailWhenCreateUserThenReturnStatusCreatedAndUserJson() throws Exception {
         CreateUserDto createUserDto = getDefaultCreateUserDto();
         User user = getDefaultUser();
-        UserDto userDto = getDefaultUserDto();
 
-//        given(userMapper.toUser(any(CreateUserDto.class))).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
-//        given(userMapper.toUserDto(any(User.class))).willReturn(userDto);
 
         ResultActions resultActions = mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDto)))
                 .andDo(print());
 
@@ -181,16 +169,14 @@ public class UserControllerTests {
     @Test
     void givenOneUserWhenUpdateUserWithAlreadyExistingUsernameThenReturnStatusBadRequest() throws Exception {
         User user = getDefaultUser();
-        String username = "ivan2";
         UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setUsername(username);
+        updateUserDto.setUsername("ivan2");
 
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
@@ -200,16 +186,14 @@ public class UserControllerTests {
     @Test
     void givenOneUserWhenUpdateUserWithAlreadyExistingEmailThenReturnStatusBadRequest() throws Exception {
         User user = getDefaultUser();
-        String email = "ivan2@test";
         UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setEmail(email);
+        updateUserDto.setEmail("ivan2@test");
 
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
@@ -226,7 +210,6 @@ public class UserControllerTests {
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
@@ -249,7 +232,6 @@ public class UserControllerTests {
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
@@ -271,7 +253,6 @@ public class UserControllerTests {
 
         ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
@@ -290,8 +271,7 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         willDoNothing().given(userService).deleteUser(any(User.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", user.getId())
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", user.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -306,8 +286,7 @@ public class UserControllerTests {
     void givenNonExistingUserIdWhenDeleteUserThenReturnStatusNotFound() throws Exception {
         given(userService.validateAndGetUserById(anyString())).willThrow(UserNotFoundException.class);
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID())
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID()))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
