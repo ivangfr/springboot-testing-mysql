@@ -1,7 +1,6 @@
 package com.mycompany.userservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import com.mycompany.userservice.dto.CreateUserDto;
 import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.exception.UserDataDuplicatedException;
@@ -62,31 +61,31 @@ public class UserControllerTests {
     void givenNoUsersWhenGetAllUsersThenReturnStatusOkAndEmptyJsonArray() throws Exception {
         given(userService.getAllUsers()).willReturn(Collections.emptyList());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users"))
+        ResultActions resultActions = mockMvc.perform(get(API_USERS_URL))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath(JSON_$, hasSize(0)));
     }
 
     @Test
     void givenOneUserWhenGetAllUsersThenReturnStatusOkAndJsonArrayWithOneUser() throws Exception {
         User user = getDefaultUser();
-        List<User> users = Lists.newArrayList(user);
+        List<User> users = Collections.singletonList(user);
 
         given(userService.getAllUsers()).willReturn(users);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users"))
+        ResultActions resultActions = mockMvc.perform(get(API_USERS_URL))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(user.getId())))
-                .andExpect(jsonPath("$[0].username", is(user.getUsername())))
-                .andExpect(jsonPath("$[0].email", is(user.getEmail())))
-                .andExpect(jsonPath("$[0].birthday", is(user.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$, hasSize(1)))
+                .andExpect(jsonPath(JSON_$_0_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_0_USERNAME, is(user.getUsername())))
+                .andExpect(jsonPath(JSON_$_0_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_0_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -95,7 +94,7 @@ public class UserControllerTests {
 
         given(userService.validateAndGetUserByUsername(username)).willThrow(UserNotFoundException.class);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/username/{username}", username))
+        ResultActions resultActions = mockMvc.perform(get(API_USERS_USERNAME_USERNAME_URL, username))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
@@ -107,15 +106,15 @@ public class UserControllerTests {
 
         given(userService.validateAndGetUserByUsername(user.getUsername())).willReturn(user);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/users/username/{username}", user.getUsername()))
+        ResultActions resultActions = mockMvc.perform(get(API_USERS_USERNAME_USERNAME_URL, user.getUsername()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(user.getId())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.birthday", is(user.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -124,7 +123,7 @@ public class UserControllerTests {
 
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users")
+        ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDto)))
                 .andDo(print());
@@ -138,7 +137,7 @@ public class UserControllerTests {
 
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users")
+        ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDto)))
                 .andDo(print());
@@ -153,17 +152,17 @@ public class UserControllerTests {
 
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        ResultActions resultActions = mockMvc.perform(post("/api/users")
+        ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserDto)))
                 .andDo(print());
 
         resultActions.andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(user.getId())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.birthday", is(user.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -175,7 +174,7 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
+        ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
@@ -192,7 +191,7 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
+        ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
@@ -208,17 +207,17 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
+        ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(user.getId())))
-                .andExpect(jsonPath("$.username", is(updateUserDto.getUsername())))
-                .andExpect(jsonPath("$.email", is(updateUserDto.getEmail())))
-                .andExpect(jsonPath("$.birthday", is(updateUserDto.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserDto.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserDto.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserDto.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -230,17 +229,17 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
+        ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(user.getId())))
-                .andExpect(jsonPath("$.username", is(updateUserDto.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.birthday", is(user.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserDto.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -251,17 +250,17 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        ResultActions resultActions = mockMvc.perform(put("/api/users/{id}", user.getId())
+        ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateUserDto)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(user.getId())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.birthday", is(updateUserDto.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserDto.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -271,25 +270,41 @@ public class UserControllerTests {
         given(userService.validateAndGetUserById(user.getId())).willReturn(user);
         willDoNothing().given(userService).deleteUser(any(User.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", user.getId()))
+        ResultActions resultActions = mockMvc.perform(delete(API_USERS_ID_URL, user.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(user.getId())))
-                .andExpect(jsonPath("$.username", is(user.getUsername())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.birthday", is(user.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
     void givenNonExistingUserIdWhenDeleteUserThenReturnStatusNotFound() throws Exception {
         given(userService.validateAndGetUserById(anyString())).willThrow(UserNotFoundException.class);
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/users/{id}", UUID.randomUUID()))
+        ResultActions resultActions = mockMvc.perform(delete(API_USERS_ID_URL, UUID.randomUUID()))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
     }
+
+    private static final String API_USERS_URL = "/api/users";
+    private static final String API_USERS_ID_URL = "/api/users/{id}";
+    private static final String API_USERS_USERNAME_USERNAME_URL = "/api/users/username/{username}";
+
+    private static final String JSON_$ = "$";
+
+    private static final String JSON_$_ID = "$.id";
+    private static final String JSON_$_USERNAME = "$.username";
+    private static final String JSON_$_EMAIL = "$.email";
+    private static final String JSON_$_BIRTHDAY = "$.birthday";
+
+    private static final String JSON_$_0_ID = "$[0].id";
+    private static final String JSON_$_0_USERNAME = "$[0].username";
+    private static final String JSON_$_0_EMAIL = "$[0].email";
+    private static final String JSON_$_0_BIRTHDAY = "$[0].birthday";
 
 }

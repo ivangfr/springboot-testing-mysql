@@ -1,14 +1,14 @@
 package com.mycompany.userservice.service;
 
-import com.google.common.collect.Lists;
 import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
@@ -22,17 +22,14 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
+@Import(UserServiceImpl.class)
 public class UserServiceImplTests {
 
+    @Autowired
     private UserService userService;
 
     @MockBean
     private UserRepository userRepository;
-
-    @BeforeEach
-    void setUp() {
-        userService = new UserServiceImpl(userRepository);
-    }
 
     @Test
     void givenValidUserWhenSaveUserThenReturnUser() throws UserDataDuplicatedException {
@@ -54,7 +51,7 @@ public class UserServiceImplTests {
     @Test
     void givenOneUserWhenGetAllUsersThenReturnListWithOneUser() {
         User user = getDefaultUser();
-        List<User> users = Lists.newArrayList(user);
+        List<User> users = Collections.singletonList(user);
 
         given(userRepository.findAll()).willReturn(users);
 
