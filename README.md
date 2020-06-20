@@ -55,7 +55,7 @@ The goals of this project are:
   ```
   docker run -t --rm --name newman \
     -v $PWD/postman:/etc/newman \
-    postman/newman:5.0.1-alpine \
+    postman/newman:5.1.0-alpine \
     run UserService.postman_collection.json --global-var "USER_SERVICE_ADDR=$HOST_IP_ADDR"
   ```
 
@@ -87,6 +87,14 @@ The goals of this project are:
 - **Integration Testing Report** can be found at
   ```
   user-service/build/reports/tests/integrationTest/index.html
+  ```
+  
+## Util Commands
+
+- **MySQL**
+  ```
+  docker exec -it mysql mysql -uroot -psecret --database=userdb
+  select * from users;
   ```
 
 ## References

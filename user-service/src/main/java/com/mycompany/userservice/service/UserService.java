@@ -1,21 +1,19 @@
 package com.mycompany.userservice.service;
 
-import com.mycompany.userservice.exception.UserDataDuplicatedException;
-import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.model.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    User saveUser(User user) throws UserDataDuplicatedException;
+    User saveUser(User user);
 
     void deleteUser(User user);
 
     List<User> getAllUsers();
 
-    User validateAndGetUserById(String id) throws UserNotFoundException;
+    User validateAndGetUserById(String id);
 
-    User validateAndGetUserByUsername(String username) throws UserNotFoundException;
+    User validateAndGetUserByUsername(String username);
 
 }

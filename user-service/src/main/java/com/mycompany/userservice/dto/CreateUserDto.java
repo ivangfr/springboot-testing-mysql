@@ -1,7 +1,8 @@
 package com.mycompany.userservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,18 +17,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateUserDto {
 
-    @ApiModelProperty(example = "ivan.franchin")
+    @Schema(example = "ivan.franchin")
     @NotBlank
     private String username;
 
-    @ApiModelProperty(position = 1, example = "ivan.franchin@test.com")
+    @Schema(example = "ivan.franchin@test.com")
     @NotBlank
     @Email
     private String email;
 
-    @ApiModelProperty(position = 2, example = "2001-01-01")
+    @Schema(example = "2001-01-01")
     @Past
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
 }

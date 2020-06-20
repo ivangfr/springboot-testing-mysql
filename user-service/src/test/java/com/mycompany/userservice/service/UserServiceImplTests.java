@@ -1,6 +1,5 @@
 package com.mycompany.userservice.service;
 
-import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
@@ -32,7 +31,7 @@ public class UserServiceImplTests {
     private UserRepository userRepository;
 
     @Test
-    void givenValidUserWhenSaveUserThenReturnUser() throws UserDataDuplicatedException {
+    void givenValidUserWhenSaveUserThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.save(user)).willReturn(user);
 
@@ -61,7 +60,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void givenExistingUserIdWhenValidateAndGetUserByIdThenReturnUser() throws UserNotFoundException {
+    void givenExistingUserIdWhenValidateAndGetUserByIdThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserById(user.getId())).willReturn(Optional.of(user));
 
@@ -78,7 +77,7 @@ public class UserServiceImplTests {
     }
 
     @Test
-    void givenExistingUserUsernameWhenValidateAndGetUserByUsernameThenReturnUser() throws UserNotFoundException {
+    void givenExistingUserUsernameWhenValidateAndGetUserByUsernameThenReturnUser() {
         User user = getDefaultUser();
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(Optional.of(user));
 
