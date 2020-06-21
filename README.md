@@ -2,8 +2,15 @@
 
 The goals of this project are:
 - Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) REST API to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
-- Explore the utilities and annotations that `Spring Boot` provides when testing applications;
-- Testing with [`Postman`](https://www.getpostman.com) and [`Newman`](https://github.com/postmanlabs/newman).
+- Explore the utilities and annotations that `Spring Boot` provides for testing applications;
+- Test using [`Testcontainers`](https://www.testcontainers.org/);
+- Test using [`Postman`](https://www.getpostman.com) and [`Newman`](https://github.com/postmanlabs/newman).
+
+## Prerequisites
+
+- `Java 11+`
+- `Docker`
+- `Docker-Compose`
 
 ## Start environment
 
@@ -30,7 +37,8 @@ The goals of this project are:
   ```
   ./gradlew user-service:clean user-service:bootRun
   ```
-  Swagger website is http://localhost:8080/swagger-ui.html
+
+- Swagger website is http://localhost:8080/swagger-ui.html
 
 ## Testing with Postman and Newman
 
@@ -74,10 +82,12 @@ The goals of this project are:
 
 - Run unit and integration tests
   ```
-  ./gradlew user-service:clean user-service:assemble user-service:cleanTest \
-  user-service:test user-service:integrationTest
+  ./gradlew user-service:clean user-service:assemble \
+    user-service:cleanTest \
+    user-service:test \
+    user-service:integrationTest
   ```
-  > **Note:** [`gradle-docker-compose-plugin`](https://github.com/avast/gradle-docker-compose-plugin) is used to start a `MySQL` container that is required by the integration tests
+  > During the tests, `Testcontainers` starts automatically `MySQL` docker container before the tests begin and shuts it down when the tests finish.
 
 - **Unit Testing Report** can be found at
   ```
@@ -93,7 +103,7 @@ The goals of this project are:
 
 - **MySQL**
   ```
-  docker exec -it mysql mysql -uroot -psecret --database=userdb
+  docker exec -it mysql mysql -uroot -psecret --database userdb
   select * from users;
   ```
 

@@ -3,7 +3,6 @@ plugins {
     id 'idea'
     id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'com.avast.gradle.docker-compose' version '0.10.9'
 }
 
 group = 'com.mycompany'
@@ -29,14 +28,9 @@ repositories {
 ext {
     set('mapstructVersion', '1.3.1.Final')
     set('springdocOpenApiVerison', '1.4.1')
+    set('testcontainersVersion', '1.14.3')
 }
 
-// adding docker-compose plugin
-
-dockerCompose {
-    useComposeFiles = ["../docker-compose.yml"]
-    startedServices = ['mysql']
-}
 
 // adding integration test
 
@@ -84,13 +78,17 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
     integrationTestCompileOnly 'org.projectlombok:lombok'
     integrationTestRuntimeOnly 'mysql:mysql-connector-java'
+
+    implementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 test {
@@ -99,6 +97,3 @@ test {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
-
-dockerCompose.isRequiredBy(integrationTest)
-dockerCompose.isRequiredBy(test)
