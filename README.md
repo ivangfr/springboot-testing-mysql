@@ -98,8 +98,8 @@ The goals of this project are:
   ```
   user-service/build/reports/tests/integrationTest/index.html
   ```
-  
-## Util Commands
+
+## Useful Commands
 
 - **MySQL**
   ```

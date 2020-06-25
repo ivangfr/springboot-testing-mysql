@@ -13,15 +13,12 @@ import java.util.Collections;
 public class ContainersExtension implements BeforeAllCallback, AfterAllCallback {
 
     @Container
-    private MySQLContainer mySQLContainer;
+    private MySQLContainer<?> mySQLContainer;
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        mySQLContainer = new MySQLContainer("mysql:8.0.20")
-                .withDatabaseName("userdb-test")
-                .withUsername("root-test")
-                .withPassword("secret-test");
-        mySQLContainer.setPortBindings(Collections.singletonList("33066:3306"));
+        mySQLContainer = new MySQLContainer<>("mysql:8.0.20");
+        mySQLContainer.setPortBindings(Collections.singletonList("3307:3306"));
         mySQLContainer.start();
     }
 
