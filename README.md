@@ -8,9 +8,9 @@ The goals of this project are:
 
 ## Prerequisites
 
-- `Java 11+`
-- `Docker`
-- `Docker-Compose`
+- [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+- [`Docker`](https://www.docker.com/)
+- [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
 ## Start environment
 
@@ -87,7 +87,7 @@ The goals of this project are:
     user-service:test \
     user-service:integrationTest
   ```
-  > During the tests, `Testcontainers` starts automatically `MySQL` docker container before the tests begin and shuts it down when the tests finish.
+  > **Note:** During the tests, `Testcontainers` starts automatically `MySQL` docker container before the tests begin and shuts it down when the tests finish.
 
 - **Unit Testing Report** can be found at
   ```

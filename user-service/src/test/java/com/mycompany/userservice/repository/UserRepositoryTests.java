@@ -1,9 +1,8 @@
 package com.mycompany.userservice.repository;
 
-import com.mycompany.userservice.ContainersExtension;
+import com.mycompany.userservice.AbstractTestcontainers;
 import com.mycompany.userservice.model.User;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -19,11 +18,10 @@ import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultU
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@ExtendWith(ContainersExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserRepositoryTests {
+public class UserRepositoryTests extends AbstractTestcontainers {
 
     @Autowired
     private TestEntityManager entityManager;

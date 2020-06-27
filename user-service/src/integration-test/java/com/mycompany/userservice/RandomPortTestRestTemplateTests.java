@@ -5,8 +5,8 @@ import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -19,6 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,10 +32,9 @@ import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultU
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@ExtendWith(ContainersExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class RandomPortTestRestTemplateTests {
+public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
     @Autowired
     private UserRepository userRepository;
@@ -361,6 +361,30 @@ public class RandomPortTestRestTemplateTests {
         Optional<User> userOptional = userRepository.findUserById(user.getId());
 
         assertThat(userOptional.isPresent()).isFalse();
+    }
+
+    @Data
+    private static class MessageError {
+
+        private String timestamp;
+        private int status;
+        private String error;
+        private String message;
+        private String path;
+        private String errorCode;
+        private List<ErrorDetail> errors;
+
+        @Data
+        public static class ErrorDetail {
+            private List<String> codes;
+            private String defaultMessage;
+            private String objectName;
+            private String field;
+            private String rejectedValue;
+            private boolean bindingFailure;
+            private String code;
+        }
+
     }
 
     private static final String API_USERS_URL = "/api/users";
