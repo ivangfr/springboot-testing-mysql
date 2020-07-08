@@ -3,7 +3,7 @@ spring:
     name: user-service
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   datasource:
     url: jdbc:mysql://localhost:3306/userdb?characterEncoding=UTF-8&serverTimezone=UTC
     username: root

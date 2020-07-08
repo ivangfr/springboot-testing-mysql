@@ -3,8 +3,7 @@
 The goals of this project are:
 - Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) REST API to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
-- Test using [`Testcontainers`](https://www.testcontainers.org/);
-- Test using [`Postman`](https://www.getpostman.com) and [`Newman`](https://github.com/postmanlabs/newman).
+- Test using [`Testcontainers`](https://www.testcontainers.org/).
 
 ## Prerequisites
 
@@ -19,7 +18,7 @@ The goals of this project are:
   docker-compose up -d
   ```
 
-- Wait a little bit until `MySQL` is `Up (healthy)`. You can check it by running
+- Wait a bit until `MySQL` is `Up (healthy)`. You can check it by running
   ```
   docker-compose ps
   ```
@@ -28,11 +27,6 @@ The goals of this project are:
 
 - In a terminal, make sure you are in `springboot-testing-mysql` root folder
 
-- Initialize `MySQL` database
-  ```
-  ./init-db.sh
-  ```
-
 - Run application
   ```
   ./gradlew user-service:clean user-service:bootRun
@@ -40,38 +34,11 @@ The goals of this project are:
 
 - Swagger website is http://localhost:8080/swagger-ui.html
 
-## Testing with Postman and Newman
-
-- Before start, make sure `user-service` application is running
-
-- Open a terminal and navigate to `springboot-testing-mysql` root folder
-
-- For this test, `users` table must be empty. Run the script below to re-start it
-  ```
-  ./init-db.sh
-  ```
-
-- Export to `HOST_IP_ADDR` environment variable the ip address of your machine
-  > **Note:** The ip address can be obtained by executing `ifconfig` command on Mac/Linux terminal or `ipconfig` on Windows
-  ```
-  export HOST_IP_ADDR=...
-  ```
-
-- \[Optional\] In `springboot-testing-mysql/postman` folder there is a pre-defined `Postman` testing collection for `user-service`. You can import and edit it in `Postman`
-
-- Run `Newman` docker container
-  ```
-  docker run -t --rm --name newman \
-    -v $PWD/postman:/etc/newman \
-    postman/newman:5.1.0-alpine \
-    run UserService.postman_collection.json --global-var "USER_SERVICE_ADDR=$HOST_IP_ADDR"
-  ```
-
 ## Shutdown
 
 - Go to the terminal where `user-service` is running and press `Ctrl+C`
 
-- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove containers, networks and volumes
+- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove docker-compose `mysql` container and network
   ```
   docker-compose down -v
   ```
