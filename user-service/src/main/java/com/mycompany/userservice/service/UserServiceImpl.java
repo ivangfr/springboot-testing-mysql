@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new UserDataDuplicatedException("The username and/or email informed already exists.");
+            throw new UserDataDuplicatedException();
         }
     }
 

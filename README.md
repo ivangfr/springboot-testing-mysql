@@ -5,6 +5,14 @@ The goals of this project are:
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
 - Test using [`Testcontainers`](https://www.testcontainers.org/).
 
+## Application
+
+- ### user-service
+
+  `Spring Boot` Web Java application to manage users. The data is stored in `MySQL`
+  
+  ![user-service-swagger](images/user-service-swagger.png)
+
 ## Prerequisites
 
 - [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)

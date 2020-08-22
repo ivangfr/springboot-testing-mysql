@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class UserDataDuplicatedException extends RuntimeException {
 
-    public UserDataDuplicatedException(String message) {
-        super(message);
+    public UserDataDuplicatedException() {
+        super("The username and/or email informed already exists.");
     }
 }
