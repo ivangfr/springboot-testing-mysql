@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserRepositoryTests extends AbstractTestcontainers {
+class UserRepositoryTests extends AbstractTestcontainers {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -37,7 +37,7 @@ public class UserRepositoryTests extends AbstractTestcontainers {
         Optional<User> userOptional = userRepository.findUserByUsername(user.getUsername());
 
         assertThat(userOptional.isPresent()).isTrue();
-        assertThat(userOptional.get()).isEqualToComparingFieldByField(user);
+        assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class UserRepositoryTests extends AbstractTestcontainers {
         Optional<User> userOptional = userRepository.findUserById(user.getId());
 
         assertThat(userOptional.isPresent()).isTrue();
-        assertThat(userOptional.get()).isEqualToComparingFieldByField(user);
+        assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class UserRepositoryTests extends AbstractTestcontainers {
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
         assertThat(userOptional.isPresent()).isTrue();
-        assertThat(userOptional.get()).isEqualToComparingFieldByField(user);
+        assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test

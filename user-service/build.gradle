@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
@@ -26,9 +26,10 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', '1.3.1.Final')
-    set('springdocOpenApiVerison', '1.4.4')
-    set('testcontainersVersion', '1.14.3')
+    set('mapstructVersion', '1.4.1.Final')
+    set('lombokMapstructBindingVersion', '0.1.0')
+    set('springdocOpenApiVerison', '1.5.0')
+    set('testcontainersVersion', '1.15.0')
 }
 
 
@@ -76,6 +77,9 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
+    // This dependency is needed so that Mapstruct can work with Lombok 1.18.16
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
     implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
 
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
@@ -86,9 +90,7 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {

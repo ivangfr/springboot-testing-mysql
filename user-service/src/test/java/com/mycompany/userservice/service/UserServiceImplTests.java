@@ -22,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @Import(UserServiceImpl.class)
-public class UserServiceImplTests {
+class UserServiceImplTests {
 
     @Autowired
     private UserService userService;
@@ -36,7 +36,7 @@ public class UserServiceImplTests {
         given(userRepository.save(user)).willReturn(user);
 
         User userSaved = userService.saveUser(user);
-        assertThat(userSaved).isEqualToComparingFieldByField(user);
+        assertThat(userSaved).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class UserServiceImplTests {
         given(userRepository.findAll()).willReturn(Collections.emptyList());
 
         List<User> usersFound = userService.getAllUsers();
-        assertThat(usersFound).hasSize(0);
+        assertThat(usersFound).isEmpty();
     }
 
     @Test
@@ -56,7 +56,7 @@ public class UserServiceImplTests {
 
         List<User> usersFound = userService.getAllUsers();
         assertThat(usersFound).hasSize(1);
-        assertThat(usersFound.get(0)).isEqualToComparingFieldByField(user);
+        assertThat(usersFound.get(0)).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class UserServiceImplTests {
         given(userRepository.findUserById(user.getId())).willReturn(Optional.of(user));
 
         User userFound = userService.validateAndGetUserById(user.getId());
-        assertThat(userFound).isEqualToComparingFieldByField(user);
+        assertThat(userFound).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class UserServiceImplTests {
         given(userRepository.findUserByUsername(user.getUsername())).willReturn(Optional.of(user));
 
         User userFound = userService.validateAndGetUserByUsername(user.getUsername());
-        assertThat(userFound).isEqualToComparingFieldByField(user);
+        assertThat(userFound).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test

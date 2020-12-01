@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @JsonTest
-public class UpdateUserDtoTests {
+class UpdateUserDtoTests {
 
     @Autowired
     private JacksonTester<UpdateUserDto> jacksonTester;
@@ -27,12 +27,17 @@ public class UpdateUserDtoTests {
 
         JsonContent<UpdateUserDto> jsonContent = jacksonTester.write(updateUserDto);
 
-        assertThat(jsonContent).hasJsonPathStringValue("@.username");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.username").isEqualTo("ivan");
-        assertThat(jsonContent).hasJsonPathStringValue("@.email");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.email").isEqualTo("ivan@test");
-        assertThat(jsonContent).hasJsonPathStringValue("@.birthday");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.birthday").isEqualTo("2018-01-01");
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.username")
+                .extractingJsonPathStringValue("@.username").isEqualTo("ivan");
+
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.email")
+                .extractingJsonPathStringValue("@.email").isEqualTo("ivan@test");
+
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.birthday")
+                .extractingJsonPathStringValue("@.birthday").isEqualTo("2018-01-01");
     }
 
     @Test
