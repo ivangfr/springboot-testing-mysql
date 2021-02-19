@@ -360,7 +360,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
         Optional<User> userOptional = userRepository.findUserById(user.getId());
 
-        assertThat(userOptional.isPresent()).isFalse();
+        assertThat(userOptional).isNotPresent();
     }
 
     @Data
@@ -398,6 +398,5 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     private static final String ERROR_CODE_USER_DATA_DUPLICATED = "UserDataDuplicated";
 
     private static final String MSG_USERNAME_EMAIL_ALREADY_EXISTS = "The username and/or email informed already exists.";
-
 
 }

@@ -36,14 +36,14 @@ class UserRepositoryTests extends AbstractTestcontainers {
 
         Optional<User> userOptional = userRepository.findUserByUsername(user.getUsername());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
     void givenNonExistingUserUsernameWhenFindUserByUsernameUsingNonExistingUsernameThenReturnOptionalEmpty() {
         Optional<User> userOptional = userRepository.findUserByUsername("ivan2");
-        assertThat(userOptional.isPresent()).isFalse();
+        assertThat(userOptional).isNotPresent();
     }
 
     @Test
@@ -53,14 +53,14 @@ class UserRepositoryTests extends AbstractTestcontainers {
 
         Optional<User> userOptional = userRepository.findUserById(user.getId());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
     void givenNonExistingUserIdWhenFindUserByIdUsingNonExistingIdThenReturnOptionalEmpty() {
         Optional<User> userOptional = userRepository.findUserById("xyz");
-        assertThat(userOptional.isPresent()).isFalse();
+        assertThat(userOptional).isNotPresent();
     }
 
     @Test
@@ -70,14 +70,14 @@ class UserRepositoryTests extends AbstractTestcontainers {
 
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
     void givenNonExistingUserEmailWhenFindUserByEmailUsingNonExistingEmailThenReturnOptionalEmpty() {
         Optional<User> userOptional = userRepository.findUserByEmail("ivan2@test");
-        assertThat(userOptional.isPresent()).isFalse();
+        assertThat(userOptional).isNotPresent();
     }
 
 }

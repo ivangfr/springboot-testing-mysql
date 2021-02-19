@@ -24,7 +24,8 @@ springdoc:
 
 ---
 spring:
-  profiles: test
+  config:
+    activate.on-profile: test
   jpa:
     hibernate:
       ddl-auto: create-drop
