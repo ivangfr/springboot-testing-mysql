@@ -1,7 +1,7 @@
 # springboot-testing-mysql
 
 The goals of this project are:
-- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) REST API to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
+- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
 - Test using [`Testcontainers`](https://www.testcontainers.org/).
 
