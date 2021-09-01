@@ -10,9 +10,9 @@ public interface UserService {
 
     void deleteUser(User user);
 
-    List<User> getAllUsers();
+    List<User> getUsers();
 
-    User validateAndGetUserById(String id);
+    User validateAndGetUserById(Long id);
 
     User validateAndGetUserByUsername(String username);
 

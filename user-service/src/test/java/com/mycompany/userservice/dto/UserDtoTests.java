@@ -10,9 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.UUID;
 
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -24,14 +22,13 @@ class UserDtoTests {
 
     @Test
     void testSerialize() throws IOException {
-        String id = UUID.randomUUID().toString();
-        UserDto userDto = getAnUserDto(id, "ivan", "ivan@test", "2018-01-01");
+        UserDto userDto = new UserDto(1L, "ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
         JsonContent<UserDto> jsonContent = jacksonTester.write(userDto);
 
         assertThat(jsonContent)
-                .hasJsonPathStringValue("@.id")
-                .extractingJsonPathStringValue("@.id").isEqualTo(userDto.getId());
+                .hasJsonPathNumberValue("@.id")
+                .extractingJsonPathNumberValue("@.id").isEqualTo(userDto.getId().intValue());
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.username")
@@ -48,14 +45,13 @@ class UserDtoTests {
 
     @Test
     void testDeserialize() throws IOException {
-        String content = "{\"id\":\"5aa5fad4-03ed-43e0-9e5f-8cfaf1ef616c\",\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
+        String content = "{\"id\":1,\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
 
         UserDto userDto = jacksonTester.parseObject(content);
 
-        assertThat(userDto.getId()).isEqualTo("5aa5fad4-03ed-43e0-9e5f-8cfaf1ef616c");
+        assertThat(userDto.getId()).isEqualTo(1);
         assertThat(userDto.getUsername()).isEqualTo("ivan");
         assertThat(userDto.getEmail()).isEqualTo("ivan@test");
         assertThat(userDto.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
     }
-
 }

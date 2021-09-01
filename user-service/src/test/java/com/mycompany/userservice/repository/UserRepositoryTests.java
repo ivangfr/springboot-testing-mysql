@@ -1,27 +1,18 @@
 package com.mycompany.userservice.repository;
 
-import com.mycompany.userservice.AbstractTestcontainers;
 import com.mycompany.userservice.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class UserRepositoryTests extends AbstractTestcontainers {
+class UserRepositoryTests {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -30,54 +21,38 @@ class UserRepositoryTests extends AbstractTestcontainers {
     private UserRepository userRepository;
 
     @Test
-    void givenExistingUserUsernameWhenFindUserByUsernameThenReturnUser() {
-        User user = getDefaultUser();
-        entityManager.persist(user);
+    void testFindUserByUsernameWhenExistent() {
+        User user = entityManager.persist(getDefaultUser());
 
         Optional<User> userOptional = userRepository.findUserByUsername(user.getUsername());
 
         assertThat(userOptional).isPresent();
-        assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
+        assertThat(userOptional.get()).isEqualTo(user);
     }
 
     @Test
-    void givenNonExistingUserUsernameWhenFindUserByUsernameUsingNonExistingUsernameThenReturnOptionalEmpty() {
+    void testFindUserByUsernameWhenNonExistent() {
         Optional<User> userOptional = userRepository.findUserByUsername("ivan2");
         assertThat(userOptional).isNotPresent();
     }
 
     @Test
-    void givenExistingUserIdWhenFindUserByIdThenReturnUser() {
-        User user = getDefaultUser();
-        entityManager.persist(user);
-
-        Optional<User> userOptional = userRepository.findUserById(user.getId());
-
-        assertThat(userOptional).isPresent();
-        assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
-    }
-
-    @Test
-    void givenNonExistingUserIdWhenFindUserByIdUsingNonExistingIdThenReturnOptionalEmpty() {
-        Optional<User> userOptional = userRepository.findUserById("xyz");
-        assertThat(userOptional).isNotPresent();
-    }
-
-    @Test
-    void givenExistingUserEmailWhenFindUserByEmailThenReturnUser() {
-        User user = getDefaultUser();
-        entityManager.persist(user);
+    void testFindUserByEmailWhenExistent() {
+        User user = entityManager.persist(getDefaultUser());
 
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
 
         assertThat(userOptional).isPresent();
-        assertThat(userOptional.get()).usingRecursiveComparison().isEqualTo(user);
+        assertThat(userOptional.get()).isEqualTo(user);
     }
 
     @Test
-    void givenNonExistingUserEmailWhenFindUserByEmailUsingNonExistingEmailThenReturnOptionalEmpty() {
+    void testFindUserByEmailWhenNonExistent() {
         Optional<User> userOptional = userRepository.findUserByEmail("ivan2@test");
         assertThat(userOptional).isNotPresent();
     }
 
+    private User getDefaultUser() {
+        return new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+    }
 }

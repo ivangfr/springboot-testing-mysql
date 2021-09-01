@@ -26,11 +26,10 @@ springdoc:
 ---
 spring:
   config:
-    activate.on-profile: test
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
+    activate:
+      on-profile: test
   datasource:
-    url:      # \
-    username: #  ) they will be set dynamically by AbstractTestcontainers
-    password: # /
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver

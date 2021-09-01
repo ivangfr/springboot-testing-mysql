@@ -17,35 +17,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnCreateUserDto;
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUpdateUserDto;
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUser;
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultCreateUserDto;
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUpdateUserDto;
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = WebEnvironment.RANDOM_PORT,
+        properties = "spring.jpa.hibernate.ddl-auto=create-drop"
+)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
     @Autowired
-    private UserRepository userRepository;
+    private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
+    private UserRepository userRepository;
 
     /* GET /api/users */
 
     @Test
-    void givenNoUsersWhenGetAllUsersThenReturnStatusOkAndEmptyArray() {
+    void testGetUsersWhenThereIsNone() {
         ResponseEntity<UserDto[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -53,7 +48,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenOneUserWhenGetAllUsersThenReturnStatusOkAndArrayWithOneUser() {
+    void testGetUsersWhenThereIsOne() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -71,7 +66,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     /* GET /api/users/username/{username} */
 
     @Test
-    void givenNonExistingUserUsernameWhenGetUserByUsernameThenReturnStatusNotFound() {
+    void testGetUserByUsernameWhenNonExistent() {
         String url = String.format(API_USERS_USERNAME_USERNAME_URL, "ivan");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity(url, MessageError.class);
 
@@ -87,7 +82,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenExistingUserUsernameWhenGetUserByUsernameThenReturnStatusOkAndUserJson() {
+    void testGetUserByUsernameWhenExistent() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -105,31 +100,43 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     /* POST /api/users */
 
     @Test
-    void givenValidUserWhenCreateUserThenReturnStatusCreatedAndUserJson() {
-        CreateUserDto createUserDto = getDefaultCreateUserDto();
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, UserDto.class);
+    void testCreateUserInformingValidInfo() {
+        CreateUserDto createUserDto = new CreateUserDto("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(
+                API_USERS_URL, createUserDto, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isNotEmpty();
+        assertThat(responseEntity.getBody().getId()).isNotNull();
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(createUserDto.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(createUserDto.getEmail());
         assertThat(responseEntity.getBody().getBirthday()).isEqualTo(createUserDto.getBirthday());
+
+        Optional<User> userOptional = userRepository.findById(responseEntity.getBody().getId());
+        assertThat(userOptional.isPresent()).isTrue();
+        userOptional.ifPresent(userCreated -> {
+            assertThat(userCreated.getUsername()).isEqualTo(createUserDto.getUsername());
+            assertThat(userCreated.getEmail()).isEqualTo(createUserDto.getEmail());
+            assertThat(userCreated.getBirthday()).isEqualTo(createUserDto.getBirthday());
+            assertThat(userCreated.getCreatedOn()).isNotNull();
+            assertThat(userCreated.getUpdatedOn()).isNotNull();
+        });
     }
 
     @Test
-    void givenUserWithAnExistingUsernameWhenCreateUserThenReturnStatusBadRequest() {
+    void testCreateUserWhenInformingExistentUsername() {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        CreateUserDto createUserDto = getAnCreateUserDto(user.getUsername(), "ivan2@test", "2018-02-02");
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, MessageError.class);
+        CreateUserDto createUserDto = new CreateUserDto(user.getUsername(), "ivan2@test", LocalDate.parse("2018-01-01"));
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
+                API_USERS_URL, createUserDto, MessageError.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
-        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_BAD_REQUEST);
+        assertThat(responseEntity.getBody().getStatus()).isEqualTo(409);
+        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_CONFLICT);
         assertThat(responseEntity.getBody().getMessage()).isEqualTo(MSG_USERNAME_EMAIL_ALREADY_EXISTS);
         assertThat(responseEntity.getBody().getPath()).isEqualTo(API_USERS_URL);
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo(ERROR_CODE_USER_DATA_DUPLICATED);
@@ -137,18 +144,19 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenUserWithAnExistingEmailWhenCreateUserThenReturnStatusBadRequest() {
+    void testCreateUserWhenInformingExistentEmail() {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan2", user.getEmail(), "2018-02-02");
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, MessageError.class);
+        CreateUserDto createUserDto = new CreateUserDto("ivan2", user.getEmail(), LocalDate.parse("2018-01-01"));
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
+                API_USERS_URL, createUserDto, MessageError.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
-        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_BAD_REQUEST);
+        assertThat(responseEntity.getBody().getStatus()).isEqualTo(409);
+        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_CONFLICT);
         assertThat(responseEntity.getBody().getMessage()).isEqualTo(MSG_USERNAME_EMAIL_ALREADY_EXISTS);
         assertThat(responseEntity.getBody().getPath()).isEqualTo(API_USERS_URL);
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo(ERROR_CODE_USER_DATA_DUPLICATED);
@@ -156,37 +164,25 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenUserWithUniqueUsernameAndEmailWhenCreateUserThenReturnStatusCreatedAndUserJson() {
-        User user = getDefaultUser();
-        userRepository.save(user);
-
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan2", "ivan2@test", "2018-02-02");
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, UserDto.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getId()).isNotEmpty();
-        assertThat(responseEntity.getBody().getUsername()).isEqualTo(createUserDto.getUsername());
-        assertThat(responseEntity.getBody().getEmail()).isEqualTo(createUserDto.getEmail());
-        assertThat(responseEntity.getBody().getBirthday()).isEqualTo(createUserDto.getBirthday());
-    }
-
-    @Test
-    void givenUserWithInvalidEmailFormatWhenCreateUserThenReturnStatusBadRequest() {
-        CreateUserDto createUserDto = getAnCreateUserDto("ivan", "ivan", "2018-01-01");
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, MessageError.class);
+    void testCreateUserInformingInvalidEmailFormat() {
+        CreateUserDto createUserDto = new CreateUserDto("ivan", "ivan", LocalDate.parse("2018-01-01"));
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
+                API_USERS_URL, createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_BAD_REQUEST);
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Validation failed for object='createUserDto'. Error count: 1");
+        assertThat(responseEntity.getBody().getMessage())
+                .isEqualTo("Validation failed for object='createUserDto'. Error count: 1");
         assertThat(responseEntity.getBody().getPath()).isEqualTo(API_USERS_URL);
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo(ERROR_CODE_BAD_REQUEST);
         assertThat(responseEntity.getBody().getErrors()).hasSize(1);
-        assertThat(responseEntity.getBody().getErrors().get(0).getCodes()).contains("Email.createUserDto.email", "Email.email", "Email.java.lang.String", "Email");
-        assertThat(responseEntity.getBody().getErrors().get(0).getDefaultMessage()).isEqualTo("must be a well-formed email address");
+        assertThat(responseEntity.getBody().getErrors().get(0).getCodes())
+                .contains("Email.createUserDto.email", "Email.email", "Email.java.lang.String", "Email");
+        assertThat(responseEntity.getBody().getErrors().get(0).getDefaultMessage())
+                .isEqualTo("must be a well-formed email address");
         assertThat(responseEntity.getBody().getErrors().get(0).getObjectName()).isEqualTo("createUserDto");
         assertThat(responseEntity.getBody().getErrors().get(0).getField()).isEqualTo("email");
         assertThat(responseEntity.getBody().getErrors().get(0).getRejectedValue()).isEqualTo("ivan");
@@ -195,16 +191,21 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenUserWithoutUsernameWhenCreateUserThenReturnStatusBadRequest() {
-        CreateUserDto createUserDto = getAnCreateUserDto(null, "ivan@test", "2018-01-01");
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(API_USERS_URL, createUserDto, MessageError.class);
+    void testCreateUserNotInformingUsername() {
+        CreateUserDto createUserDto = new CreateUserDto();
+        createUserDto.setEmail("ivan@test");
+        createUserDto.setBirthday(LocalDate.parse("2018-01-01"));
+
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
+                API_USERS_URL, createUserDto, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
         assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_BAD_REQUEST);
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Validation failed for object='createUserDto'. Error count: 1");
+        assertThat(responseEntity.getBody().getMessage())
+                .isEqualTo("Validation failed for object='createUserDto'. Error count: 1");
         assertThat(responseEntity.getBody().getPath()).isEqualTo(API_USERS_URL);
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo(ERROR_CODE_BAD_REQUEST);
         assertThat(responseEntity.getBody().getErrors()).hasSize(1);
@@ -213,13 +214,18 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     /* PUT /api/users */
 
     @Test
-    void givenNonExistingUserIdWhenUpdateUserThenReturnStatusNotFound() {
-        String id = "5dcb867b-01e5-4741-8da8-c8c97e17842c";
-        UpdateUserDto updateUserDto = getDefaultUpdateUserDto();
+    void testUpdateUserWhenNonExisting() {
+        Long id = 1L;
+        UpdateUserDto updateUserDto = new UpdateUserDto();
+        updateUserDto.setUsername("ivan");
+        updateUserDto.setEmail("ivan@test");
+        updateUserDto.setBirthday(LocalDate.parse("2018-01-01"));
+
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
 
         String url = String.format(API_USERS_ID_URL, id);
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, requestUpdate, MessageError.class);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -233,25 +239,23 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenTwoUsersWhenUpdateUser1WithUser2UsernameThenReturnStatusBadRequest() {
-        User user1 = getDefaultUser();
-        userRepository.save(user1);
-
-        User user2 = getAnUser(UUID.randomUUID().toString(), "ivan2", "ivan2@test", "2018-02-02");
-        userRepository.save(user2);
+    void testUpdateUserWhenUpdatingUsernameWithExistingOne() {
+        User user1 = userRepository.save(new User("ivan", "ivan@test", LocalDate.parse("2018-01-01")));
+        User user2 = userRepository.save(new User("ivan2", "ivan2@test", LocalDate.parse("2018-02-02")));
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setUsername(user2.getUsername());
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
         String url = String.format(API_USERS_ID_URL, user1.getId());
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, requestUpdate, MessageError.class);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.PUT, requestUpdate, MessageError.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
-        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_BAD_REQUEST);
+        assertThat(responseEntity.getBody().getStatus()).isEqualTo(409);
+        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_CONFLICT);
         assertThat(responseEntity.getBody().getMessage()).isEqualTo(MSG_USERNAME_EMAIL_ALREADY_EXISTS);
         assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo(ERROR_CODE_USER_DATA_DUPLICATED);
@@ -259,25 +263,23 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenTwoUsersWhenUpdateUser1WithUser2EmailThenReturnStatusBadRequest() {
-        User user1 = getDefaultUser();
-        userRepository.save(user1);
-
-        User user2 = getAnUser(UUID.randomUUID().toString(), "ivan2", "ivan2@test", "2018-02-02");
-        userRepository.save(user2);
+    void testUpdateUserWhenUpdatingEmailWithExistingOne() {
+        User user1 = userRepository.save(new User("ivan", "ivan@test", LocalDate.parse("2018-01-01")));
+        User user2 = userRepository.save(new User("ivan2", "ivan2@test", LocalDate.parse("2018-02-02")));
 
         UpdateUserDto updateUserDto = new UpdateUserDto();
         updateUserDto.setEmail(user2.getEmail());
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
         String url = String.format(API_USERS_ID_URL, user1.getId());
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, requestUpdate, MessageError.class);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.PUT, requestUpdate, MessageError.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(400);
-        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_BAD_REQUEST);
+        assertThat(responseEntity.getBody().getStatus()).isEqualTo(409);
+        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_CONFLICT);
         assertThat(responseEntity.getBody().getMessage()).isEqualTo(MSG_USERNAME_EMAIL_ALREADY_EXISTS);
         assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrorCode()).isEqualTo(ERROR_CODE_USER_DATA_DUPLICATED);
@@ -285,7 +287,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenExistingUserIdWhenUpdateUserWithUniqueUsernameAndEmailThenReturnStatusOkAndUserJson() {
+    void testUpdateUserWhenUpdatingUsernameAndEmailWithUniqueValues() {
         User user = getDefaultUser();
         userRepository.save(user);
 
@@ -295,7 +297,8 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
         String url = String.format(API_USERS_ID_URL, user.getId());
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, requestUpdate, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.PUT, requestUpdate, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -303,18 +306,30 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(updateUserDto.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(updateUserDto.getEmail());
         assertThat(responseEntity.getBody().getBirthday()).isEqualTo(user.getBirthday());
+
+        Optional<User> userOptional = userRepository.findById(responseEntity.getBody().getId());
+        assertThat(userOptional.isPresent()).isTrue();
+        userOptional.ifPresent(userUpdated -> {
+            assertThat(userUpdated.getUsername()).isEqualTo(updateUserDto.getUsername());
+            assertThat(userUpdated.getEmail()).isEqualTo(updateUserDto.getEmail());
+            assertThat(userUpdated.getBirthday()).isEqualTo(user.getBirthday());
+            assertThat(userUpdated.getCreatedOn()).isNotNull();
+            assertThat(userUpdated.getUpdatedOn()).isNotNull();
+        });
     }
 
     @Test
-    void givenExistingUserIdWhenUpdateUserInformingSameUsernameAndEmailButDifferentBirthdayThenReturnStatusOkAndUserJson() {
+    void testUpdateUserWhenUpdatingBirthday() {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan", "ivan@test", "2018-02-02");
+        UpdateUserDto updateUserDto = new UpdateUserDto();
+        updateUserDto.setBirthday(LocalDate.parse("2018-02-02"));
 
         HttpEntity<UpdateUserDto> requestUpdate = new HttpEntity<>(updateUserDto);
         String url = String.format(API_USERS_ID_URL, user.getId());
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, requestUpdate, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.PUT, requestUpdate, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -322,15 +337,24 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getUsername()).isEqualTo(user.getUsername());
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
         assertThat(responseEntity.getBody().getBirthday()).isEqualTo(updateUserDto.getBirthday());
+
+        Optional<User> userOptional = userRepository.findById(responseEntity.getBody().getId());
+        assertThat(userOptional.isPresent()).isTrue();
+        userOptional.ifPresent(userUpdated -> {
+            assertThat(userUpdated.getUsername()).isEqualTo(user.getUsername());
+            assertThat(userUpdated.getEmail()).isEqualTo(user.getEmail());
+            assertThat(userUpdated.getBirthday()).isEqualTo(updateUserDto.getBirthday());
+        });
     }
 
     /* DELETE /api/users */
 
     @Test
-    void givenNonExistingUserIdWhenDeleteUserThenReturnStatusNotFound() {
-        UUID id = UUID.randomUUID();
+    void testDeleteUserWhenNonExistent() {
+        Long id = 1L;
         String url = String.format(API_USERS_ID_URL, id);
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, MessageError.class);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.DELETE, null, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -344,12 +368,13 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenExistingUserIdWhenDeleteUserThenReturnStatusOkAndUserJson() {
+    void testDeleteUserWhenExistent() {
         User user = getDefaultUser();
         userRepository.save(user);
 
         String url = String.format(API_USERS_ID_URL, user.getId());
-        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, UserDto.class);
+        ResponseEntity<UserDto> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.DELETE, null, UserDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -358,9 +383,12 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getEmail()).isEqualTo(user.getEmail());
         assertThat(responseEntity.getBody().getBirthday()).isEqualTo(user.getBirthday());
 
-        Optional<User> userOptional = userRepository.findUserById(user.getId());
-
+        Optional<User> userOptional = userRepository.findById(user.getId());
         assertThat(userOptional).isNotPresent();
+    }
+
+    private User getDefaultUser() {
+        return new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
     }
 
     @Data
@@ -384,7 +412,6 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
             private boolean bindingFailure;
             private String code;
         }
-
     }
 
     private static final String API_USERS_URL = "/api/users";
@@ -395,6 +422,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     private static final String ERROR_CODE_NOT_FOUND = "UserNotFound";
     private static final String ERROR_BAD_REQUEST = "Bad Request";
     private static final String ERROR_CODE_BAD_REQUEST = "BadRequest";
+    private static final String ERROR_CONFLICT = "Conflict";
     private static final String ERROR_CODE_USER_DATA_DUPLICATED = "UserDataDuplicated";
 
     private static final String MSG_USERNAME_EMAIL_ALREADY_EXISTS = "The username and/or email informed already exists.";

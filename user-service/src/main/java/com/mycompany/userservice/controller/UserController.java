@@ -20,53 +20,50 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping("/users")
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers()
+    @GetMapping
+    public List<UserDto> getUsers() {
+        return userService.getUsers()
                 .stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/users/username/{username}")
+    @GetMapping("/username/{username}")
     public UserDto getUserByUsername(@PathVariable String username) {
         User user = userService.validateAndGetUserByUsername(username);
         return userMapper.toUserDto(user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/users")
+    @PostMapping
     public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
         User user = userMapper.toUser(createUserDto);
-        user.setId(UUID.randomUUID().toString());
         user = userService.saveUser(user);
         return userMapper.toUserDto(user);
     }
 
-    @PutMapping("/users/{id}")
-    public UserDto updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserDto updateUserDto) {
-        User user = userService.validateAndGetUserById(id.toString());
+    @PutMapping("/{id}")
+    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) {
+        User user = userService.validateAndGetUserById(id);
         userMapper.updateUserFromDto(updateUserDto, user);
         user = userService.saveUser(user);
         return userMapper.toUserDto(user);
     }
 
-    @DeleteMapping("/users/{id}")
-    public UserDto deleteUser(@PathVariable UUID id) {
-        User user = userService.validateAndGetUserById(id.toString());
+    @DeleteMapping("/{id}")
+    public UserDto deleteUser(@PathVariable Long id) {
+        User user = userService.validateAndGetUserById(id);
         userService.deleteUser(user);
         return userMapper.toUserDto(user);
     }
-
 }

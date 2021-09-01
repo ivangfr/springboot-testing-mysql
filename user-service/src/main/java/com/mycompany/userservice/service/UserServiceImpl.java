@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User validateAndGetUserById(String id) {
-        return userRepository.findUserById(id)
+    public User validateAndGetUserById(Long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id '%s' doesn't exist.", id)));
     }
 

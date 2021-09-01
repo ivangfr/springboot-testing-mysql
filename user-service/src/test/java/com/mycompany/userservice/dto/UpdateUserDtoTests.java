@@ -11,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static com.mycompany.userservice.helper.UserServiceTestHelper.getAnUpdateUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -23,7 +22,7 @@ class UpdateUserDtoTests {
 
     @Test
     void testSerialize() throws IOException {
-        UpdateUserDto updateUserDto = getAnUpdateUserDto("ivan", "ivan@test", "2018-01-01");
+        UpdateUserDto updateUserDto = new UpdateUserDto("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
         JsonContent<UpdateUserDto> jsonContent = jacksonTester.write(updateUserDto);
 
@@ -50,5 +49,4 @@ class UpdateUserDtoTests {
         assertThat(updateUserDto.getEmail()).isEqualTo("ivan@test");
         assertThat(updateUserDto.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
     }
-
 }
