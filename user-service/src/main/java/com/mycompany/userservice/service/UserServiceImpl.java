@@ -46,5 +46,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with username '%s' doesn't exist.", username)));
     }
-
 }

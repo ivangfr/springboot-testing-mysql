@@ -5,7 +5,7 @@ import com.mycompany.userservice.dto.UpdateUserDto;
 import com.mycompany.userservice.dto.UserDto;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.repository.UserRepository;
-import lombok.Data;
+import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -391,26 +391,26 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         return new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
     }
 
-    @Data
+    @Value
     private static class MessageError {
 
-        private String timestamp;
-        private int status;
-        private String error;
-        private String message;
-        private String path;
-        private String errorCode;
-        private List<ErrorDetail> errors;
+        String timestamp;
+        int status;
+        String error;
+        String message;
+        String path;
+        String errorCode;
+        List<ErrorDetail> errors;
 
-        @Data
+        @Value
         public static class ErrorDetail {
-            private List<String> codes;
-            private String defaultMessage;
-            private String objectName;
-            private String field;
-            private String rejectedValue;
-            private boolean bindingFailure;
-            private String code;
+            List<String> codes;
+            String defaultMessage;
+            String objectName;
+            String field;
+            String rejectedValue;
+            boolean bindingFailure;
+            String code;
         }
     }
 

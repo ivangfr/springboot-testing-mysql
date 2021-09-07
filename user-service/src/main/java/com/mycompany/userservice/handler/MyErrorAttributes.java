@@ -51,5 +51,4 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
 
         private final String description;
     }
-
 }
