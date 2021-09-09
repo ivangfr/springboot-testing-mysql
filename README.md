@@ -19,19 +19,19 @@ The goals of this project are:
 - [`Docker`](https://www.docker.com/)
 - [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
-## Start environment
+## Start Environment
 
 - Open a terminal and inside `springboot-testing-mysql` root folder run
   ```
   docker-compose up -d
   ```
 
-- Wait a bit until `MySQL` is `Up (healthy)`. You can check it by running
+- Wait a bit until `MySQL` is `running (healthy)`. You can check it by running
   ```
   docker-compose ps
   ```
 
-## Start application
+## Start Application
 
 - In a terminal, make sure you are in `springboot-testing-mysql` root folder
 
@@ -62,7 +62,7 @@ The goals of this project are:
     user-service:test \
     user-service:integrationTest
   ```
-  > **Note:** During the tests, `Testcontainers` starts automatically `MySQL` docker container before the tests begin and shuts it down when the tests finish.
+  > **Note:** During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
 
 - **Unit Testing Report** can be found at
   ```
