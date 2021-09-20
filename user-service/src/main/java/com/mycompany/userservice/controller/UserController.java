@@ -1,8 +1,8 @@
 package com.mycompany.userservice.controller;
 
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
-import com.mycompany.userservice.dto.UserDto;
+import com.mycompany.userservice.dto.CreateUserRequest;
+import com.mycompany.userservice.dto.UpdateUserRequest;
+import com.mycompany.userservice.dto.UserResponse;
 import com.mycompany.userservice.mapper.UserMapper;
 import com.mycompany.userservice.model.User;
 import com.mycompany.userservice.service.UserService;
@@ -31,39 +31,39 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping
-    public List<UserDto> getUsers() {
+    public List<UserResponse> getUsers() {
         return userService.getUsers()
                 .stream()
-                .map(userMapper::toUserDto)
+                .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/username/{username}")
-    public UserDto getUserByUsername(@PathVariable String username) {
+    public UserResponse getUserByUsername(@PathVariable String username) {
         User user = userService.validateAndGetUserByUsername(username);
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody CreateUserDto createUserDto) {
-        User user = userMapper.toUser(createUserDto);
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        User user = userMapper.toUser(createUserRequest);
         user = userService.saveUser(user);
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDto updateUserDto) {
+    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User user = userService.validateAndGetUserById(id);
-        userMapper.updateUserFromDto(updateUserDto, user);
+        userMapper.updateUserFromRequest(updateUserRequest, user);
         user = userService.saveUser(user);
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable Long id) {
+    public UserResponse deleteUser(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
         userService.deleteUser(user);
-        return userMapper.toUserDto(user);
+        return userMapper.toUserResponse(user);
     }
 }

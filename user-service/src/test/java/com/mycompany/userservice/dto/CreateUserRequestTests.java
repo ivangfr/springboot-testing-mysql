@@ -15,20 +15,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @JsonTest
-class UserDtoTests {
+class CreateUserRequestTests {
 
     @Autowired
-    private JacksonTester<UserDto> jacksonTester;
+    private JacksonTester<CreateUserRequest> jacksonTester;
 
     @Test
     void testSerialize() throws IOException {
-        UserDto userDto = new UserDto(1L, "ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+        CreateUserRequest createUserRequest = new CreateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
-        JsonContent<UserDto> jsonContent = jacksonTester.write(userDto);
-
-        assertThat(jsonContent)
-                .hasJsonPathNumberValue("@.id")
-                .extractingJsonPathNumberValue("@.id").isEqualTo(userDto.getId().intValue());
+        JsonContent<CreateUserRequest> jsonContent = jacksonTester.write(createUserRequest);
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.username")
@@ -45,13 +41,12 @@ class UserDtoTests {
 
     @Test
     void testDeserialize() throws IOException {
-        String content = "{\"id\":1,\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
+        String content = "{\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
 
-        UserDto userDto = jacksonTester.parseObject(content);
+        CreateUserRequest createUserRequest = jacksonTester.parseObject(content);
 
-        assertThat(userDto.getId()).isEqualTo(1);
-        assertThat(userDto.getUsername()).isEqualTo("ivan");
-        assertThat(userDto.getEmail()).isEqualTo("ivan@test");
-        assertThat(userDto.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
+        assertThat(createUserRequest.getUsername()).isEqualTo("ivan");
+        assertThat(createUserRequest.getEmail()).isEqualTo("ivan@test");
+        assertThat(createUserRequest.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
     }
 }

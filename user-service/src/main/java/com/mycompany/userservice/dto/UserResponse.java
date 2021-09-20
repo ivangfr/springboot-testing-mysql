@@ -7,7 +7,7 @@ import lombok.Value;
 import java.time.LocalDate;
 
 @Value
-public class UserDto {
+public class UserResponse {
 
     Long id;
     String username;
@@ -15,5 +15,4 @@ public class UserDto {
 
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate birthday;
-
 }

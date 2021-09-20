@@ -1,8 +1,8 @@
 package com.mycompany.userservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
+import com.mycompany.userservice.dto.CreateUserRequest;
+import com.mycompany.userservice.dto.UpdateUserRequest;
 import com.mycompany.userservice.exception.UserDataDuplicatedException;
 import com.mycompany.userservice.exception.UserNotFoundException;
 import com.mycompany.userservice.mapper.UserMapperImpl;
@@ -115,13 +115,13 @@ class UserControllerTests {
 
     @Test
     void testCreateUserWhenInformingExistentUsername() throws Exception {
-        CreateUserDto createUserDto = getDefaultCreateUserDto();
+        CreateUserRequest createUserRequest = getDefaultCreateUserRequest();
 
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createUserDto)))
+                        .content(objectMapper.writeValueAsString(createUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isConflict());
@@ -129,13 +129,13 @@ class UserControllerTests {
 
     @Test
     void testCreateUserWhenInformingExistentEmail() throws Exception {
-        CreateUserDto createUserDto = getDefaultCreateUserDto();
+        CreateUserRequest createUserRequest = getDefaultCreateUserRequest();
 
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createUserDto)))
+                        .content(objectMapper.writeValueAsString(createUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isConflict());
@@ -146,10 +146,10 @@ class UserControllerTests {
         User user = getDefaultUser();
         given(userService.saveUser(any(User.class))).willReturn(user);
 
-        CreateUserDto createUserDto = getDefaultCreateUserDto();
+        CreateUserRequest createUserRequest = getDefaultCreateUserRequest();
         ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createUserDto)))
+                        .content(objectMapper.writeValueAsString(createUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isCreated())
@@ -163,15 +163,15 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenInformingExistingUsername() throws Exception {
         User user = getDefaultUser();
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setUsername("ivan2");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setUsername("ivan2");
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDto)))
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isConflict());
@@ -180,15 +180,15 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenInformingExistingEmail() throws Exception {
         User user = getDefaultUser();
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setEmail("ivan2@test");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setEmail("ivan2@test");
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDto)))
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isConflict());
@@ -197,42 +197,42 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenChangingAllFields() throws Exception {
         User user = getDefaultUser();
-        UpdateUserDto updateUserDto = new UpdateUserDto("ivan2", "ivan2@test", LocalDate.parse("2018-02-02"));
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan2", "ivan2@test", LocalDate.parse("2018-02-02"));
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDto)))
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserDto.getUsername())))
-                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserDto.getEmail())))
-                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserDto.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserRequest.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserRequest.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserRequest.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
     void testUpdateUserWhenChangingJustUsernameField() throws Exception {
         User user = getDefaultUser();
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setUsername("ivan2");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setUsername("ivan2");
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDto)))
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserDto.getUsername())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserRequest.getUsername())))
                 .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
                 .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
@@ -240,15 +240,15 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenChangingJustBirthdayField() throws Exception {
         User user = getDefaultUser();
-        UpdateUserDto updateUserDto = new UpdateUserDto();
-        updateUserDto.setBirthday(LocalDate.parse("2018-02-02"));
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setBirthday(LocalDate.parse("2018-02-02"));
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
 
         ResultActions resultActions = mockMvc.perform(put(API_USERS_ID_URL, user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDto)))
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -256,7 +256,7 @@ class UserControllerTests {
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
                 .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
                 .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
-                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserDto.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserRequest.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -293,8 +293,8 @@ class UserControllerTests {
         return user;
     }
 
-    public CreateUserDto getDefaultCreateUserDto() {
-        return new CreateUserDto("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+    public CreateUserRequest getDefaultCreateUserRequest() {
+        return new CreateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
     }
 
     private static final String API_USERS_URL = "/api/users";
@@ -312,5 +312,4 @@ class UserControllerTests {
     private static final String JSON_$_0_USERNAME = "$[0].username";
     private static final String JSON_$_0_EMAIL = "$[0].email";
     private static final String JSON_$_0_BIRTHDAY = "$[0].birthday";
-
 }

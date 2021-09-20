@@ -1,8 +1,8 @@
 package com.mycompany.userservice.mapper;
 
-import com.mycompany.userservice.dto.CreateUserDto;
-import com.mycompany.userservice.dto.UpdateUserDto;
-import com.mycompany.userservice.dto.UserDto;
+import com.mycompany.userservice.dto.CreateUserRequest;
+import com.mycompany.userservice.dto.UpdateUserRequest;
+import com.mycompany.userservice.dto.UserResponse;
 import com.mycompany.userservice.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -16,10 +16,9 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface UserMapper {
 
-    User toUser(CreateUserDto createUserDto);
+    User toUser(CreateUserRequest createUserRequest);
 
-    UserDto toUserDto(User user);
+    UserResponse toUserResponse(User user);
 
-    void updateUserFromDto(UpdateUserDto updateUserDto, @MappingTarget User user);
-
+    void updateUserFromRequest(UpdateUserRequest updateUserRequest, @MappingTarget User user);
 }

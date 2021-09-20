@@ -8,24 +8,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateUserDto {
+public class CreateUserRequest {
 
-    @Schema(example = "ivan2.franchin")
+    @Schema(example = "ivan.franchin")
+    @NotBlank
     private String username;
 
-    @Schema(example = "ivan2.franchin@test.com")
+    @Schema(example = "ivan.franchin@test.com")
+    @NotBlank
     @Email
     private String email;
 
-    @Schema(example = "2002-02-02")
+    @Schema(example = "2001-01-01")
     @Past
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
-
 }

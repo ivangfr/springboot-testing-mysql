@@ -15,5 +15,4 @@ public interface UserService {
     User validateAndGetUserById(Long id);
 
     User validateAndGetUserByUsername(String username);
-
 }
