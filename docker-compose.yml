@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   mysql:
-    image: mysql:8.0.26
+    image: mysql:8.0.27
     container_name: mysql
     ports:
       - "3306:3306"
@@ -12,4 +12,3 @@ services:
       - MYSQL_DATABASE=userdb
     healthcheck:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
-      start_period: 10s

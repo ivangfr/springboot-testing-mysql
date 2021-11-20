@@ -11,11 +11,11 @@ The goals of this project are:
 
   `Spring Boot` Web Java application to manage users. The data is stored in `MySQL`
   
-  ![user-service-swagger](images/user-service-swagger.png)
+  ![user-service-swagger](documentation/user-service-swagger.png)
 
 ## Prerequisites
 
-- [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+- [`Java 11+`](https://www.oracle.com/java/technologies/downloads/#java11)
 - [`Docker`](https://www.docker.com/)
 - [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
@@ -26,7 +26,7 @@ The goals of this project are:
   docker-compose up -d
   ```
 
-- Wait a bit until `MySQL` is `running (healthy)`. You can check it by running
+- Wait for `MySQL` Docker container to be up and running. To check it, run
   ```
   docker-compose ps
   ```
