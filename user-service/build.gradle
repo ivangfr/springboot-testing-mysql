@@ -25,7 +25,7 @@ repositories {
 ext {
     set('mapstructVersion', '1.4.2.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '1.6.5')
+    set('springdocOpenApiVerison', '1.6.6')
     set('testcontainersVersion', '1.16.3')
 }
 
@@ -62,11 +62,12 @@ task integrationTest(type: Test) {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
 
-    annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
 
@@ -77,20 +78,22 @@ dependencies {
     // This dependency is needed so that Mapstruct can work with Lombok 1.18.16 or newer
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
-    implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
-
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
     integrationTestCompileOnly 'org.projectlombok:lombok'
     integrationTestRuntimeOnly 'mysql:mysql-connector-java'
 
-    implementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-test {
+dependencyManagement {
+    imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
+}
+
+tasks.named('test') {
     useJUnitPlatform()
 }
 
