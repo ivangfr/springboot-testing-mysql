@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.5'
+    id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'idea'
@@ -25,7 +25,7 @@ repositories {
 ext {
     set('mapstructVersion', '1.4.2.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '1.6.6')
+    set('springdocOpenApiVerison', '1.6.8')
     set('testcontainersVersion', '1.16.3')
 }
 
@@ -47,16 +47,6 @@ idea {
         testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
 //        testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
     }
-}
-
-task integrationTest(type: Test) {
-    group 'springboot-testing'
-    description 'Runs the integration tests'
-
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
-
-    useJUnitPlatform()
 }
 
 dependencies {
@@ -97,5 +87,20 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-check.dependsOn integrationTest
-integrationTest.mustRunAfter test
+task integrationTest(type: Test) {
+    group 'springboot-testing'
+    description 'Runs the integration tests'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    useJUnitPlatform()
+}
+
+integrationTest {
+    mustRunAfter test
+}
+
+check {
+    dependsOn integrationTest
+}

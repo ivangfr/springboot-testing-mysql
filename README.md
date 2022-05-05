@@ -51,25 +51,29 @@ The goals of this project are:
   docker-compose down -v
   ```
 
-## Running Unit and Integration Testing
+## Running Unit and Integration Tests
 
 - In a terminal, navigate to `springboot-testing-mysql` root folder
 
-- Run unit and integration tests
-  ```
-  ./gradlew user-service:clean user-service:assemble \
-    user-service:cleanTest \
-    user-service:test \
-    user-service:integrationTest
-  ```
-  > **Note:** During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
+- Running Tests
 
-- **Unit Testing Report** can be found at
+  - Unit Tests only
+    ```
+    ./gradlew user-service:clean user-service:cleanTest user-service:test
+    ```
+
+  - Unit and Integration Tests
+    ```
+    ./gradlew user-service:clean user-service:cleanTest user-service:check user-service:integrationTest
+    ```
+    > **Note:** During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
+
+- **Unit Test Report** can be found at
   ```
   user-service/build/reports/tests/test/index.html
   ```
 
-- **Integration Testing Report** can be found at
+- **Integration Test Report** can be found at
   ```
   user-service/build/reports/tests/integrationTest/index.html
   ```
@@ -78,8 +82,8 @@ The goals of this project are:
 
 - **MySQL**
   ```
-  docker exec -it mysql mysql -uroot -psecret --database userdb
-  select * from users;
+  docker exec -it -e MYSQL_PWD=secret mysql mysql -uroot --database userdb
+  SELECT * FROM users;
   ```
 
 ## References
