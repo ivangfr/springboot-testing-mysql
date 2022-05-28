@@ -25,8 +25,8 @@ repositories {
 ext {
     set('mapstructVersion', '1.4.2.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '1.6.8')
-    set('testcontainersVersion', '1.16.3')
+    set('springdocOpenApiVerison', '1.6.9')
+    set('testcontainersVersion', '1.17.2')
 }
 
 // adding integration test
