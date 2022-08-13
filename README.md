@@ -11,11 +11,11 @@ The goals of this project are:
 
   `Spring Boot` Web Java application to manage users. The data is stored in `MySQL`
   
-  ![user-service-swagger](documentation/user-service-swagger.png)
+  ![user-service-swagger](documentation/user-service-swagger.jpeg)
 
 ## Prerequisites
 
-- [`Java 11+`](https://www.oracle.com/java/technologies/downloads/#java11)
+- [`Java 17+`](https://www.oracle.com/java/technologies/downloads/#java17)
 - [`Docker`](https://www.docker.com/)
 - [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
@@ -40,7 +40,7 @@ The goals of this project are:
   ./gradlew user-service:clean user-service:bootRun
   ```
 
-- Swagger website is http://localhost:8080/swagger-ui.html
+- Swagger website is http://localhost:8080/swagger-ui/index.html
 
 ## Shutdown
 
@@ -66,7 +66,7 @@ The goals of this project are:
     ```
     ./gradlew user-service:clean user-service:cleanTest user-service:check user-service:integrationTest
     ```
-    > **Note:** During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
+    > **Note**: During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
 
 - **Unit Test Report** can be found at
   ```
