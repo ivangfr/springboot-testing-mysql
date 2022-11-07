@@ -40,7 +40,7 @@ The goals of this project are:
   ./gradlew user-service:clean user-service:bootRun
   ```
 
-- Swagger website is http://localhost:8080/swagger-ui/index.html
+- Swagger website is http://localhost:8080/swagger-ui.html
 
 ## Shutdown
 
