@@ -1,11 +1,12 @@
 package com.ivanfranchin.userservice.controller;
 
+import com.ivanfranchin.userservice.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.dto.UserResponse;
 import com.ivanfranchin.userservice.mapper.UserMapper;
 import com.ivanfranchin.userservice.model.User;
 import com.ivanfranchin.userservice.service.UserService;
-import com.ivanfranchin.userservice.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.dto.UpdateUserRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 

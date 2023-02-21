@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.5'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.springframework.boot' version '3.0.2'
+    id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
     id 'idea'
 }
@@ -25,8 +25,8 @@ repositories {
 ext {
     set('mapstructVersion', '1.5.3.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '1.6.12')
-    set('testcontainersVersion', '1.17.4')
+    set('springdocOpenApiVerison', '2.0.2')
+    set('testcontainersVersion', '1.17.6')
 }
 
 // adding integration test
@@ -54,11 +54,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocOpenApiVerison}"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -70,7 +70,7 @@ dependencies {
 
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
     integrationTestCompileOnly 'org.projectlombok:lombok'
-    integrationTestRuntimeOnly 'mysql:mysql-connector-java'
+    integrationTestRuntimeOnly 'com.mysql:mysql-connector-j'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
