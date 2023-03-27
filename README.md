@@ -5,6 +5,10 @@ The goals of this project are:
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
 - Test using [`Testcontainers`](https://www.testcontainers.org/).
 
+## Project Diagram
+
+![project-diagram](documentation/project-diagram.jpeg)
+
 ## Application
 
 - ### user-service
