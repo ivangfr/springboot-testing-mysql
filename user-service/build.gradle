@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.0.5'
+    id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
     id 'idea'
@@ -23,9 +23,9 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', '1.5.3.Final')
+    set('mapstructVersion', '1.5.5.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '2.0.4')
+    set('springdocOpenApiVerison', '2.1.0')
     set('testcontainersVersion', '1.17.6')
 }
 
@@ -73,14 +73,9 @@ dependencies {
     integrationTestRuntimeOnly 'com.mysql:mysql-connector-j'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-    }
 }
 
 tasks.named('test') {
