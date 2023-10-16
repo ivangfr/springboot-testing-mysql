@@ -8,7 +8,7 @@ public interface MyContainers {
 
     @Container
     @ServiceConnection
-    MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.0.32")
+    MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:8.1.0")
             .withUrlParam("characterEncoding", "UTF-8")
             .withUrlParam("serverTimezone", "UTC");
 }
