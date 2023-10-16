@@ -25,18 +25,17 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - [`Java 17+`](https://www.oracle.com/java/technologies/downloads/#java17)
 - [`Docker`](https://www.docker.com/)
-- [`Docker-Compose`](https://docs.docker.com/compose/install/)
 
 ## Start Environment
 
 - Open a terminal and inside `springboot-testing-mysql` root folder run
   ```
-  docker-compose up -d
+  docker compose up -d
   ```
 
 - Wait for `MySQL` Docker container to be up and running. To check it, run
   ```
-  docker-compose ps
+  docker compose ps
   ```
 
 ## Start Application
@@ -54,9 +53,9 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - Go to the terminal where `user-service` is running and press `Ctrl+C`
 
-- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove docker-compose `mysql` container and network
+- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove docker compose `mysql` container and network
   ```
-  docker-compose down -v
+  docker compose down -v
   ```
 
 ## Running Unit and Integration Tests
