@@ -5,6 +5,10 @@ The goals of this project are:
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
 - Test using [`Testcontainers`](https://www.testcontainers.org/).
 
+## Proof-of-Concepts & Articles
+
+On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-Concepts (PoCs) and articles. You can easily search for the technology you are interested in by using the filter. Who knows, perhaps I have already implemented a PoC or written an article about what you are looking for.
+
 ## Project Diagram
 
 ![project-diagram](documentation/project-diagram.jpeg)
