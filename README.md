@@ -17,7 +17,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - ### user-service
 
-  `Spring Boot` Web Java application to manage users. The data is stored in `MySQL`
+  `Spring Boot` Web Java application to manage users. The data is stored in `MySQL`.
   
   ![user-service-swagger](documentation/user-service-swagger.jpeg)
 
@@ -28,21 +28,21 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Start Environment
 
-- Open a terminal and inside `springboot-testing-mysql` root folder run
+- Open a terminal and inside `springboot-testing-mysql` root folder run:
   ```
   docker compose up -d
   ```
 
-- Wait for `MySQL` Docker container to be up and running. To check it, run
+- Wait for `MySQL` Docker container to be up and running. To check it, run:
   ```
   docker compose ps
   ```
 
 ## Start Application
 
-- In a terminal, make sure you are in `springboot-testing-mysql` root folder
+- In a terminal, make sure you are in `springboot-testing-mysql` root folder;
 
-- Run application
+- Run application:
   ```
   ./gradlew user-service:clean user-service:bootRun
   ```
@@ -51,36 +51,36 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Shutdown
 
-- Go to the terminal where `user-service` is running and press `Ctrl+C`
+- Go to the terminal where `user-service` is running and press `Ctrl+C`;
 
-- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove docker compose `mysql` container and network
+- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove docker compose `mysql` container and network:
   ```
   docker compose down -v
   ```
 
 ## Running Unit and Integration Tests
 
-- In a terminal, navigate to `springboot-testing-mysql` root folder
+- In a terminal, navigate to `springboot-testing-mysql` root folder;
 
 - Running Tests
 
-  - Unit Tests only
+  - Unit Tests only:
     ```
     ./gradlew user-service:clean user-service:cleanTest user-service:test
     ```
 
-  - Unit and Integration Tests
+  - Unit and Integration Tests:
     ```
     ./gradlew user-service:clean user-service:cleanTest user-service:check user-service:integrationTest
     ```
     > **Note**: During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
 
-- **Unit Test Report** can be found at
+- **Unit Test Report** can be found at:
   ```
   user-service/build/reports/tests/test/index.html
   ```
 
-- **Integration Test Report** can be found at
+- **Integration Test Report** can be found at:
   ```
   user-service/build/reports/tests/integrationTest/index.html
   ```
