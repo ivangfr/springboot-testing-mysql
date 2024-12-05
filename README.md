@@ -1,9 +1,9 @@
 # springboot-testing-mysql
 
 The goals of this project are:
-- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
+- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
-- Test using [`Testcontainers`](https://www.testcontainers.org/).
+- Test using [`Testcontainers`](https://testcontainers.com).
 
 ## Proof-of-Concepts & Articles
 
@@ -23,12 +23,12 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Prerequisites
 
-- [`Java 17+`](https://www.oracle.com/java/technologies/downloads/#java17)
-- [`Docker`](https://www.docker.com/)
+- [`Java 21+`](https://www.oracle.com/java/technologies/downloads/#java21)
+- Some containerization tool [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.
 
 ## Start Environment
 
-- Open a terminal and inside `springboot-testing-mysql` root folder run:
+- Open a terminal and inside the `springboot-testing-mysql` root folder run:
   ```
   docker compose up -d
   ```
@@ -40,27 +40,27 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Start Application
 
-- In a terminal, make sure you are in `springboot-testing-mysql` root folder;
+- In a terminal, make sure you are in the `springboot-testing-mysql` root folder;
 
 - Run application:
   ```
   ./gradlew user-service:clean user-service:bootRun
   ```
 
-- Swagger website is http://localhost:8080/swagger-ui.html
+- Swagger website can be accessed at http://localhost:8080/swagger-ui.html
 
 ## Shutdown
 
 - Go to the terminal where `user-service` is running and press `Ctrl+C`;
 
-- In a terminal and inside `springboot-testing-mysql` root folder, run to command below to stop and remove docker compose `mysql` container and network:
+- In a terminal and inside the `springboot-testing-mysql` root folder, run to command below to stop and remove docker compose `mysql` container and network:
   ```
   docker compose down -v
   ```
 
 ## Running Unit and Integration Tests
 
-- In a terminal, navigate to `springboot-testing-mysql` root folder;
+- In a terminal, navigate to the `springboot-testing-mysql` root folder;
 
 - Running Tests
 
@@ -92,8 +92,3 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   docker exec -it -e MYSQL_PWD=secret mysql mysql -uroot --database userdb
   SELECT * FROM users;
   ```
-
-## References
-
-- https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
-- http://www.baeldung.com/spring-boot-testing

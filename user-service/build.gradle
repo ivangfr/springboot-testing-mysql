@@ -1,15 +1,17 @@
 plugins {
     id 'idea'
     id 'java'
-    id 'org.springframework.boot' version '3.3.0'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.ivanfranchin'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
@@ -26,9 +28,9 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', '1.5.5.Final')
+    set('mapstructVersion', '1.6.3')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVersion', '2.5.0')
+    set('springdocOpenApiVersion', '2.7.0')
 }
 
 // adding integration test
