@@ -109,16 +109,16 @@ class UserServiceApplicationTests {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().id()).isNotNull();
-        assertThat(responseEntity.getBody().username()).isEqualTo(createUserRequest.getUsername());
-        assertThat(responseEntity.getBody().email()).isEqualTo(createUserRequest.getEmail());
-        assertThat(responseEntity.getBody().birthday()).isEqualTo(createUserRequest.getBirthday());
+        assertThat(responseEntity.getBody().username()).isEqualTo(createUserRequest.username());
+        assertThat(responseEntity.getBody().email()).isEqualTo(createUserRequest.email());
+        assertThat(responseEntity.getBody().birthday()).isEqualTo(createUserRequest.birthday());
 
         Optional<User> userOptional = userRepository.findById(responseEntity.getBody().id());
         assertThat(userOptional.isPresent()).isTrue();
         userOptional.ifPresent(userCreated -> {
-            assertThat(userCreated.getUsername()).isEqualTo(createUserRequest.getUsername());
-            assertThat(userCreated.getEmail()).isEqualTo(createUserRequest.getEmail());
-            assertThat(userCreated.getBirthday()).isEqualTo(createUserRequest.getBirthday());
+            assertThat(userCreated.getUsername()).isEqualTo(createUserRequest.username());
+            assertThat(userCreated.getEmail()).isEqualTo(createUserRequest.email());
+            assertThat(userCreated.getBirthday()).isEqualTo(createUserRequest.birthday());
             assertThat(userCreated.getCreatedOn()).isNotNull();
             assertThat(userCreated.getUpdatedOn()).isNotNull();
         });
@@ -193,9 +193,7 @@ class UserServiceApplicationTests {
 
     @Test
     void testCreateUserNotInformingUsername() {
-        CreateUserRequest createUserRequest = new CreateUserRequest();
-        createUserRequest.setEmail("ivan@test");
-        createUserRequest.setBirthday(LocalDate.parse("2018-01-01"));
+        CreateUserRequest createUserRequest = new CreateUserRequest(null, "ivan@test", LocalDate.parse("2018-01-01"));
 
         ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
                 API_USERS_URL, createUserRequest, MessageError.class);
@@ -217,10 +215,7 @@ class UserServiceApplicationTests {
     @Test
     void testUpdateUserWhenNonExisting() {
         Long id = 1L;
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setUsername("ivan");
-        updateUserRequest.setEmail("ivan@test");
-        updateUserRequest.setBirthday(LocalDate.parse("2018-01-01"));
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
         HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
 
@@ -244,8 +239,7 @@ class UserServiceApplicationTests {
         User user1 = userRepository.save(new User("ivan", "ivan@test", LocalDate.parse("2018-01-01")));
         User user2 = userRepository.save(new User("ivan2", "ivan2@test", LocalDate.parse("2018-02-02")));
 
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setUsername(user2.getUsername());
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(user2.getUsername(), null, null);
 
         HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user1.getId());
@@ -268,8 +262,7 @@ class UserServiceApplicationTests {
         User user1 = userRepository.save(new User("ivan", "ivan@test", LocalDate.parse("2018-01-01")));
         User user2 = userRepository.save(new User("ivan2", "ivan2@test", LocalDate.parse("2018-02-02")));
 
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setEmail(user2.getEmail());
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, user2.getEmail(), null);
 
         HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user1.getId());
@@ -292,9 +285,7 @@ class UserServiceApplicationTests {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setUsername("ivan2");
-        updateUserRequest.setEmail("ivan2@test");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan2", "ivan2@test", null);
 
         HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user.getId());
@@ -304,15 +295,15 @@ class UserServiceApplicationTests {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().id()).isEqualTo(user.getId());
-        assertThat(responseEntity.getBody().username()).isEqualTo(updateUserRequest.getUsername());
-        assertThat(responseEntity.getBody().email()).isEqualTo(updateUserRequest.getEmail());
+        assertThat(responseEntity.getBody().username()).isEqualTo(updateUserRequest.username());
+        assertThat(responseEntity.getBody().email()).isEqualTo(updateUserRequest.email());
         assertThat(responseEntity.getBody().birthday()).isEqualTo(user.getBirthday());
 
         Optional<User> userOptional = userRepository.findById(responseEntity.getBody().id());
         assertThat(userOptional.isPresent()).isTrue();
         userOptional.ifPresent(userUpdated -> {
-            assertThat(userUpdated.getUsername()).isEqualTo(updateUserRequest.getUsername());
-            assertThat(userUpdated.getEmail()).isEqualTo(updateUserRequest.getEmail());
+            assertThat(userUpdated.getUsername()).isEqualTo(updateUserRequest.username());
+            assertThat(userUpdated.getEmail()).isEqualTo(updateUserRequest.email());
             assertThat(userUpdated.getBirthday()).isEqualTo(user.getBirthday());
             assertThat(userUpdated.getCreatedOn()).isNotNull();
             assertThat(userUpdated.getUpdatedOn()).isNotNull();
@@ -324,8 +315,7 @@ class UserServiceApplicationTests {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setBirthday(LocalDate.parse("2018-02-02"));
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, null, LocalDate.parse("2018-02-02"));
 
         HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user.getId());
@@ -337,14 +327,14 @@ class UserServiceApplicationTests {
         assertThat(responseEntity.getBody().id()).isEqualTo(user.getId());
         assertThat(responseEntity.getBody().username()).isEqualTo(user.getUsername());
         assertThat(responseEntity.getBody().email()).isEqualTo(user.getEmail());
-        assertThat(responseEntity.getBody().birthday()).isEqualTo(updateUserRequest.getBirthday());
+        assertThat(responseEntity.getBody().birthday()).isEqualTo(updateUserRequest.birthday());
 
         Optional<User> userOptional = userRepository.findById(responseEntity.getBody().id());
         assertThat(userOptional.isPresent()).isTrue();
         userOptional.ifPresent(userUpdated -> {
             assertThat(userUpdated.getUsername()).isEqualTo(user.getUsername());
             assertThat(userUpdated.getEmail()).isEqualTo(user.getEmail());
-            assertThat(userUpdated.getBirthday()).isEqualTo(updateUserRequest.getBirthday());
+            assertThat(userUpdated.getBirthday()).isEqualTo(updateUserRequest.birthday());
         });
     }
 

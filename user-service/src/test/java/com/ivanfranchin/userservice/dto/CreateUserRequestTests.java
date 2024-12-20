@@ -42,8 +42,8 @@ class CreateUserRequestTests {
 
         CreateUserRequest createUserRequest = jacksonTester.parseObject(content);
 
-        assertThat(createUserRequest.getUsername()).isEqualTo("ivan");
-        assertThat(createUserRequest.getEmail()).isEqualTo("ivan@test");
-        assertThat(createUserRequest.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
+        assertThat(createUserRequest.username()).isEqualTo("ivan");
+        assertThat(createUserRequest.email()).isEqualTo("ivan@test");
+        assertThat(createUserRequest.birthday()).isEqualTo(LocalDate.parse("2018-01-01"));
     }
 }

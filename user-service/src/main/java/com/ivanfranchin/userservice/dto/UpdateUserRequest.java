@@ -5,26 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Past;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UpdateUserRequest {
-
-    @Schema(example = "ivan2.franchin")
-    private String username;
-
-    @Schema(example = "ivan2.franchin@test.com")
-    @Email
-    private String email;
-
-    @Schema(example = "2002-02-02")
-    @Past
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate birthday;
+public record UpdateUserRequest(
+        @Schema(example = "ivan2.franchin") String username,
+        @Schema(example = "ivan2.franchin@test.com") @Email String email,
+        @Schema(example = "2002-02-02") @Past @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd") LocalDate birthday) {
 }

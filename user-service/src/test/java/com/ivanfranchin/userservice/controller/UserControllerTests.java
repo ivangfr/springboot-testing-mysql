@@ -160,8 +160,7 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenInformingExistingUsername() throws Exception {
         User user = getDefaultUser();
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setUsername("ivan2");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan2", null, null);
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
@@ -177,8 +176,7 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenInformingExistingEmail() throws Exception {
         User user = getDefaultUser();
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setEmail("ivan2@test");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, "ivan2@test", null);
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         willThrow(UserDataDuplicatedException.class).given(userService).saveUser(any(User.class));
@@ -207,16 +205,15 @@ class UserControllerTests {
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserRequest.getUsername())))
-                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserRequest.getEmail())))
-                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserRequest.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserRequest.username())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(updateUserRequest.email())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserRequest.birthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
     void testUpdateUserWhenChangingJustUsernameField() throws Exception {
         User user = getDefaultUser();
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setUsername("ivan2");
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan2", null, null);
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
@@ -229,7 +226,7 @@ class UserControllerTests {
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserRequest.getUsername())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(updateUserRequest.username())))
                 .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
                 .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
@@ -237,8 +234,7 @@ class UserControllerTests {
     @Test
     void testUpdateUserWhenChangingJustBirthdayField() throws Exception {
         User user = getDefaultUser();
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setBirthday(LocalDate.parse("2018-02-02"));
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, null, LocalDate.parse("2018-02-02"));
 
         given(userService.validateAndGetUserById(anyLong())).willReturn(user);
         given(userService.saveUser(any(User.class))).willReturn(user);
@@ -253,7 +249,7 @@ class UserControllerTests {
                 .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
                 .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
                 .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
-                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserRequest.getBirthday().format(ISO_LOCAL_DATE))));
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(updateUserRequest.birthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test

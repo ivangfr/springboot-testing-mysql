@@ -42,8 +42,8 @@ class UpdateUserRequestTests {
 
         UpdateUserRequest updateUserRequest = jacksonTester.parseObject(content);
 
-        assertThat(updateUserRequest.getUsername()).isEqualTo("ivan");
-        assertThat(updateUserRequest.getEmail()).isEqualTo("ivan@test");
-        assertThat(updateUserRequest.getBirthday()).isEqualTo(LocalDate.parse("2018-01-01"));
+        assertThat(updateUserRequest.username()).isEqualTo("ivan");
+        assertThat(updateUserRequest.email()).isEqualTo("ivan@test");
+        assertThat(updateUserRequest.birthday()).isEqualTo(LocalDate.parse("2018-01-01"));
     }
 }
