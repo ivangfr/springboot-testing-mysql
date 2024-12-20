@@ -1,5 +1,7 @@
 package com.ivanfranchin.userservice.model;
 
+import com.ivanfranchin.userservice.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.dto.UpdateUserRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,5 +58,25 @@ public class User {
     @PreUpdate
     public void onPreUpdate() {
         updatedOn = Instant.now();
+    }
+
+    public static User from(CreateUserRequest createUserRequest) {
+        return new User(
+                createUserRequest.username(),
+                createUserRequest.email(),
+                createUserRequest.birthday()
+        );
+    }
+
+    public static void updateFromRequest(UpdateUserRequest updateUserRequest, User user) {
+        if (updateUserRequest.username() != null) {
+            user.setUsername(updateUserRequest.username());
+        }
+        if (updateUserRequest.email() != null) {
+            user.setEmail(updateUserRequest.email());
+        }
+        if (updateUserRequest.birthday() != null) {
+            user.setBirthday(updateUserRequest.birthday());
+        }
     }
 }

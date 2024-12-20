@@ -28,8 +28,6 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', '1.6.3')
-    set('lombokMapstructBindingVersion', '0.2.0')
     set('springdocOpenApiVersion', '2.7.0')
 }
 
@@ -63,13 +61,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
-
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-
-    // This dependency is needed so that Mapstruct can work with Lombok 1.18.16 or newer
-    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
     integrationTestCompileOnly 'org.projectlombok:lombok'
