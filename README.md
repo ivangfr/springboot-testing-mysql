@@ -35,7 +35,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - Wait for `MySQL` Docker container to be up and running. To check it, run:
   ```
-  docker compose ps
+  docker ps -a
   ```
 
 ## Start Application
