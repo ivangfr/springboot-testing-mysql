@@ -12,8 +12,8 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -37,10 +37,10 @@ public class User {
     private LocalDate birthday;
 
     @Column(nullable = false)
-    private ZonedDateTime createdOn;
+    private Instant createdOn;
 
     @Column(nullable = false)
-    private ZonedDateTime updatedOn;
+    private Instant updatedOn;
 
     public User(String username, String email, LocalDate birthday) {
         this.username = username;
@@ -50,11 +50,11 @@ public class User {
 
     @PrePersist
     public void onPrePersist() {
-        createdOn = updatedOn = ZonedDateTime.now();
+        createdOn = updatedOn = Instant.now();
     }
 
     @PreUpdate
     public void onPreUpdate() {
-        updatedOn = ZonedDateTime.now();
+        updatedOn = Instant.now();
     }
 }
