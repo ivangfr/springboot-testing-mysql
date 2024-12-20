@@ -1,7 +1,7 @@
-package com.ivanfranchin.userservice.model;
+package com.ivanfranchin.userservice.user.model;
 
-import com.ivanfranchin.userservice.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

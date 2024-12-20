@@ -1,6 +1,6 @@
-package com.ivanfranchin.userservice.repository;
+package com.ivanfranchin.userservice.user;
 
-import com.ivanfranchin.userservice.model.User;
+import com.ivanfranchin.userservice.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

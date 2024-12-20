@@ -1,6 +1,7 @@
 package com.ivanfranchin.userservice.repository;
 
-import com.ivanfranchin.userservice.model.User;
+import com.ivanfranchin.userservice.user.model.User;
+import com.ivanfranchin.userservice.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

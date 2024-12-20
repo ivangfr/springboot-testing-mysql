@@ -1,4 +1,4 @@
-package com.ivanfranchin.userservice.dto;
+package com.ivanfranchin.userservice.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;

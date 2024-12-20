@@ -1,4 +1,4 @@
-package com.ivanfranchin.userservice.exception;
+package com.ivanfranchin.userservice.user.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

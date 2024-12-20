@@ -1,7 +1,7 @@
-package com.ivanfranchin.userservice.handler;
+package com.ivanfranchin.userservice.config;
 
-import com.ivanfranchin.userservice.exception.UserNotFoundException;
-import com.ivanfranchin.userservice.exception.UserDataDuplicatedException;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
+import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.boot.web.error.ErrorAttributeOptions;

@@ -1,10 +1,10 @@
 package com.ivanfranchin.userservice;
 
-import com.ivanfranchin.userservice.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.dto.UpdateUserRequest;
-import com.ivanfranchin.userservice.dto.UserResponse;
-import com.ivanfranchin.userservice.model.User;
-import com.ivanfranchin.userservice.repository.UserRepository;
+import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UserResponse;
+import com.ivanfranchin.userservice.user.model.User;
+import com.ivanfranchin.userservice.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

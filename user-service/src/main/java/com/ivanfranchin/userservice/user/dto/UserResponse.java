@@ -1,8 +1,8 @@
-package com.ivanfranchin.userservice.dto;
+package com.ivanfranchin.userservice.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.ivanfranchin.userservice.model.User;
+import com.ivanfranchin.userservice.user.model.User;
 
 import java.time.LocalDate;
 

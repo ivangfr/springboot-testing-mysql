@@ -1,6 +1,6 @@
-package com.ivanfranchin.userservice.service;
+package com.ivanfranchin.userservice.user;
 
-import com.ivanfranchin.userservice.model.User;
+import com.ivanfranchin.userservice.user.model.User;
 
 import java.util.List;
 

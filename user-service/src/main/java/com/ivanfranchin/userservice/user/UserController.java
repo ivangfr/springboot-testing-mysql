@@ -1,10 +1,9 @@
-package com.ivanfranchin.userservice.controller;
+package com.ivanfranchin.userservice.user;
 
-import com.ivanfranchin.userservice.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.dto.UpdateUserRequest;
-import com.ivanfranchin.userservice.dto.UserResponse;
-import com.ivanfranchin.userservice.model.User;
-import com.ivanfranchin.userservice.service.UserService;
+import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UserResponse;
+import com.ivanfranchin.userservice.user.model.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

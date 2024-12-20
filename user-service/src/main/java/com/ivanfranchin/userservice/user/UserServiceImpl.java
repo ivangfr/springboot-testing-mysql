@@ -1,9 +1,8 @@
-package com.ivanfranchin.userservice.service;
+package com.ivanfranchin.userservice.user;
 
-import com.ivanfranchin.userservice.exception.UserNotFoundException;
-import com.ivanfranchin.userservice.exception.UserDataDuplicatedException;
-import com.ivanfranchin.userservice.model.User;
-import com.ivanfranchin.userservice.repository.UserRepository;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
+import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
+import com.ivanfranchin.userservice.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

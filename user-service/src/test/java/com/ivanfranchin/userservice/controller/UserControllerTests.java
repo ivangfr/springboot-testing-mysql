@@ -1,12 +1,13 @@
 package com.ivanfranchin.userservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivanfranchin.userservice.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.dto.UpdateUserRequest;
-import com.ivanfranchin.userservice.exception.UserDataDuplicatedException;
-import com.ivanfranchin.userservice.exception.UserNotFoundException;
-import com.ivanfranchin.userservice.model.User;
-import com.ivanfranchin.userservice.service.UserService;
+import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
+import com.ivanfranchin.userservice.user.model.User;
+import com.ivanfranchin.userservice.user.UserController;
+import com.ivanfranchin.userservice.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
