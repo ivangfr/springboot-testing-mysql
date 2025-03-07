@@ -52,7 +52,7 @@ public class UserController {
     @PutMapping("/{id}")
     public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User user = userService.validateAndGetUserById(id);
-        User.updateFromRequest(updateUserRequest, user);
+        User.updateFrom(updateUserRequest, user);
         user = userService.saveUser(user);
         return UserResponse.from(user);
     }

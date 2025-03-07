@@ -1,6 +1,6 @@
 # springboot-testing-mysql
 
-The goals of this project are:
+The goals of this project are to:
 - Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
 - Explore the utilities and annotations that `Spring Boot` provides for testing applications;
 - Test using [`Testcontainers`](https://testcontainers.com).
@@ -23,8 +23,8 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Prerequisites
 
-- [`Java 21+`](https://www.oracle.com/java/technologies/downloads/#java21)
-- Some containerization tool [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.
+- [`Java 21`](https://www.oracle.com/java/technologies/downloads/#java21) or higher;
+- A containerization tool (e.g., [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.)
 
 ## Start Environment
 
@@ -33,7 +33,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   docker compose up -d
   ```
 
-- Wait for `MySQL` Docker container to be up and running. To check it, run:
+- Wait for the `MySQL` Docker container to be up and running. To check it, run:
   ```
   docker ps -a
   ```
@@ -47,13 +47,13 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   ./gradlew user-service:clean user-service:bootRun
   ```
 
-- Swagger website can be accessed at http://localhost:8080/swagger-ui.html
+- The Swagger website can be accessed at http://localhost:8080/swagger-ui.html
 
 ## Shutdown
 
 - Go to the terminal where `user-service` is running and press `Ctrl+C`;
 
-- In a terminal and inside the `springboot-testing-mysql` root folder, run to command below to stop and remove docker compose `mysql` container and network:
+- In a terminal, inside the `springboot-testing-mysql` root folder, run the command below to stop and remove the Docker Compose `mysql` container and network:
   ```
   docker compose down -v
   ```
@@ -73,7 +73,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
     ```
     ./gradlew user-service:clean user-service:cleanTest user-service:check user-service:integrationTest
     ```
-    > **Note**: During the tests, `Testcontainers` starts automatically `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
+    > **Note**: During the tests, `Testcontainers` automatically starts the `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
 
 - **Unit Test Report** can be found at:
   ```

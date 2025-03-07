@@ -1,18 +1,43 @@
 package com.ivanfranchin.userservice.user;
 
+import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.user.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserService {
+@RequiredArgsConstructor
+@Service
+public class UserService {
 
-    User saveUser(User user);
+    private final UserRepository userRepository;
 
-    void deleteUser(User user);
+    public User saveUser(User user) {
+        try {
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new UserDataDuplicatedException();
+        }
+    }
 
-    List<User> getUsers();
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
 
-    User validateAndGetUserById(Long id);
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 
-    User validateAndGetUserByUsername(String username);
+    public User validateAndGetUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id '%s' doesn't exist.", id)));
+    }
+
+    public User validateAndGetUserByUsername(String username) {
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username '%s' doesn't exist.", username)));
+    }
 }

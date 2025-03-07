@@ -68,7 +68,7 @@ public class User {
         );
     }
 
-    public static void updateFromRequest(UpdateUserRequest updateUserRequest, User user) {
+    public static void updateFrom(UpdateUserRequest updateUserRequest, User user) {
         if (updateUserRequest.username() != null) {
             user.setUsername(updateUserRequest.username());
         }

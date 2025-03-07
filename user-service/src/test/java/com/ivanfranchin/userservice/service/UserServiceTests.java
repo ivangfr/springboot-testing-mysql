@@ -4,7 +4,6 @@ import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.user.model.User;
 import com.ivanfranchin.userservice.user.UserRepository;
 import com.ivanfranchin.userservice.user.UserService;
-import com.ivanfranchin.userservice.user.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
-@Import(UserServiceImpl.class)
-class UserServiceImplTests {
+@Import(UserService.class)
+class UserServiceTests {
 
     @Autowired
     private UserService userService;
