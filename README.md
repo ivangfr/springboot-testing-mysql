@@ -18,7 +18,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - ### user-service
 
   `Spring Boot` Web Java application to manage users. The data is stored in `MySQL`.
-  
+
   ![user-service-swagger](documentation/user-service-swagger.jpeg)
 
 ## Prerequisites
@@ -29,12 +29,12 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 ## Start Environment
 
 - Open a terminal and inside the `springboot-testing-mysql` root folder run:
-  ```
+  ```bash
   docker compose up -d
   ```
 
 - Wait for the `MySQL` Docker container to be up and running. To check it, run:
-  ```
+  ```bash
   docker ps -a
   ```
 
@@ -43,7 +43,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - In a terminal, make sure you are in the `springboot-testing-mysql` root folder;
 
 - Run application:
-  ```
+  ```bash
   ./gradlew user-service:clean user-service:bootRun
   ```
 
@@ -54,7 +54,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - Go to the terminal where `user-service` is running and press `Ctrl+C`;
 
 - In a terminal, inside the `springboot-testing-mysql` root folder, run the command below to stop and remove the Docker Compose `mysql` container and network:
-  ```
+  ```bash
   docker compose down -v
   ```
 
@@ -65,30 +65,30 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 - Running Tests
 
   - Unit Tests only:
-    ```
+    ```bash
     ./gradlew user-service:clean user-service:cleanTest user-service:test
     ```
 
   - Unit and Integration Tests:
-    ```
+    ```bash
     ./gradlew user-service:clean user-service:cleanTest user-service:check user-service:integrationTest
     ```
     > **Note**: During the tests, `Testcontainers` automatically starts the `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
 
 - **Unit Test Report** can be found at:
-  ```
+  ```text
   user-service/build/reports/tests/test/index.html
   ```
 
 - **Integration Test Report** can be found at:
-  ```
+  ```text
   user-service/build/reports/tests/integrationTest/index.html
   ```
 
 ## Useful Commands
 
 - **MySQL**
-  ```
+  ```bash
   docker exec -it -e MYSQL_PWD=secret mysql mysql -uroot --database userdb
   SELECT * FROM users;
   ```
