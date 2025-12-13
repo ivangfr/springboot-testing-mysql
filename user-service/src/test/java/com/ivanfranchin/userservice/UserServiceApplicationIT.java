@@ -24,8 +24,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ImportTestcontainers(MyContainers.class)
-class UserServiceApplicationTests {
+@ImportTestcontainers(MySQLTestcontainers.class)
+class UserServiceApplicationIT {
 
     @Autowired
     private TestRestTemplate testRestTemplate;

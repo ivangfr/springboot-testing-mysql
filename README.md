@@ -1,8 +1,8 @@
 # springboot-testing-mysql
 
 The goals of this project are to:
-- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com);
-- Explore the utilities and annotations that `Spring Boot` provides for testing applications;
+- Create a simple [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application to manage users called `user-service`. The database used is [`MySQL`](https://www.mysql.com).
+- Explore the utilities and annotations that `Spring Boot` provides for testing applications.
 - Test using [`Testcontainers`](https://testcontainers.com).
 
 ## Proof-of-Concepts & Articles
@@ -44,7 +44,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 - Run application:
   ```bash
-  ./gradlew user-service:clean user-service:bootRun
+  ./mvnw clean spring-boot:run --projects user-service
   ```
 
 - The Swagger website can be accessed at http://localhost:8080/swagger-ui.html
@@ -66,24 +66,14 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
   - Unit Tests only:
     ```bash
-    ./gradlew user-service:clean user-service:cleanTest user-service:test
+    ./mvnw clean test --projects user-service
     ```
 
   - Unit and Integration Tests:
     ```bash
-    ./gradlew user-service:clean user-service:cleanTest user-service:check user-service:integrationTest
+    ./mvnw clean verify --projects user-service
     ```
     > **Note**: During the tests, `Testcontainers` automatically starts the `MySQL` Docker container before the tests begin and shuts it down when the tests finish.
-
-- **Unit Test Report** can be found at:
-  ```text
-  user-service/build/reports/tests/test/index.html
-  ```
-
-- **Integration Test Report** can be found at:
-  ```text
-  user-service/build/reports/tests/integrationTest/index.html
-  ```
 
 ## Useful Commands
 

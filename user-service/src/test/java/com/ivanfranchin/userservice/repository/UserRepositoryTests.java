@@ -1,11 +1,13 @@
 package com.ivanfranchin.userservice.repository;
 
-import com.ivanfranchin.userservice.user.model.User;
+import com.ivanfranchin.userservice.MySQLTestcontainers;
 import com.ivanfranchin.userservice.user.UserRepository;
+import com.ivanfranchin.userservice.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@ImportTestcontainers(MySQLTestcontainers.class)
 class UserRepositoryTests {
 
     @Autowired

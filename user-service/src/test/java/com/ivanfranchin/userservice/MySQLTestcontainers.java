@@ -4,11 +4,11 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-public interface MyContainers {
+public interface MySQLTestcontainers {
 
     @Container
     @ServiceConnection
-    MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.1.0")
+    MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:9.2.0")
             .withUrlParam("characterEncoding", "UTF-8")
             .withUrlParam("serverTimezone", "UTC");
 }
