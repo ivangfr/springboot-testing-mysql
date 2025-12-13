@@ -59,7 +59,7 @@ class UserServiceTests {
 
         List<User> usersFound = userService.getUsers();
         assertThat(usersFound).hasSize(1);
-        assertThat(usersFound.get(0)).isEqualTo(user);
+        assertThat(usersFound.getFirst()).isEqualTo(user);
     }
 
     @Test
