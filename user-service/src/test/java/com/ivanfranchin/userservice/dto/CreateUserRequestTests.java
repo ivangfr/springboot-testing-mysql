@@ -1,7 +1,6 @@
 package com.ivanfranchin.userservice.dto;
 
 import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -17,13 +16,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CreateUserRequestTests {
 
     @Autowired
-    private JacksonTester<@NotNull CreateUserRequest> jacksonTester;
+    private JacksonTester<CreateUserRequest> jacksonTester;
 
     @Test
     void testSerialize() throws IOException {
         CreateUserRequest createUserRequest = new CreateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
-        JsonContent<@NotNull CreateUserRequest> jsonContent = jacksonTester.write(createUserRequest);
+        JsonContent<CreateUserRequest> jsonContent = jacksonTester.write(createUserRequest);
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.username")

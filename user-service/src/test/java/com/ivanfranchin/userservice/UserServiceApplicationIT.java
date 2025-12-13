@@ -5,7 +5,6 @@ import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import com.ivanfranchin.userservice.user.dto.UserResponse;
 import com.ivanfranchin.userservice.user.model.User;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ class UserServiceApplicationIT {
 
     @Test
     void testGetUsersWhenThereIsNone() {
-        ResponseEntity<UserResponse @NotNull []> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserResponse[].class);
+        ResponseEntity<UserResponse[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserResponse[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isEmpty();
@@ -56,7 +55,7 @@ class UserServiceApplicationIT {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        ResponseEntity<UserResponse @NotNull []> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserResponse[].class);
+        ResponseEntity<UserResponse[]> responseEntity = testRestTemplate.getForEntity(API_USERS_URL, UserResponse[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -72,7 +71,7 @@ class UserServiceApplicationIT {
     @Test
     void testGetUserByUsernameWhenNonExistent() {
         String url = String.format(API_USERS_USERNAME_USERNAME_URL, "ivan");
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.getForEntity(url, MessageError.class);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity(url, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -91,7 +90,7 @@ class UserServiceApplicationIT {
         userRepository.save(user);
 
         String url = String.format(API_USERS_USERNAME_USERNAME_URL, user.getUsername());
-        ResponseEntity<@NotNull UserResponse> responseEntity = testRestTemplate.getForEntity(url, UserResponse.class);
+        ResponseEntity<UserResponse> responseEntity = testRestTemplate.getForEntity(url, UserResponse.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -106,7 +105,7 @@ class UserServiceApplicationIT {
     @Test
     void testCreateUserInformingValidInfo() {
         CreateUserRequest createUserRequest = new CreateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
-        ResponseEntity<@NotNull UserResponse> responseEntity = testRestTemplate.postForEntity(
+        ResponseEntity<UserResponse> responseEntity = testRestTemplate.postForEntity(
                 API_USERS_URL, createUserRequest, UserResponse.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -133,7 +132,7 @@ class UserServiceApplicationIT {
         userRepository.save(user);
 
         CreateUserRequest createUserRequest = new CreateUserRequest(user.getUsername(), "ivan2@test", LocalDate.parse("2018-01-01"));
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.postForEntity(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
                 API_USERS_URL, createUserRequest, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -153,7 +152,7 @@ class UserServiceApplicationIT {
         userRepository.save(user);
 
         CreateUserRequest createUserRequest = new CreateUserRequest("ivan2", user.getEmail(), LocalDate.parse("2018-01-01"));
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.postForEntity(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
                 API_USERS_URL, createUserRequest, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -170,7 +169,7 @@ class UserServiceApplicationIT {
     @Test
     void testCreateUserInformingInvalidEmailFormat() {
         CreateUserRequest createUserRequest = new CreateUserRequest("ivan", "ivan", LocalDate.parse("2018-01-01"));
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.postForEntity(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
                 API_USERS_URL, createUserRequest, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -198,7 +197,7 @@ class UserServiceApplicationIT {
     void testCreateUserNotInformingUsername() {
         CreateUserRequest createUserRequest = new CreateUserRequest(null, "ivan@test", LocalDate.parse("2018-01-01"));
 
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.postForEntity(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
                 API_USERS_URL, createUserRequest, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -220,10 +219,10 @@ class UserServiceApplicationIT {
         Long id = 1L;
         UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
-        HttpEntity<@NotNull UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
+        HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
 
         String url = String.format(API_USERS_ID_URL, id);
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -244,9 +243,9 @@ class UserServiceApplicationIT {
 
         UpdateUserRequest updateUserRequest = new UpdateUserRequest(user2.getUsername(), null, null);
 
-        HttpEntity<@NotNull UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
+        HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user1.getId());
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -267,9 +266,9 @@ class UserServiceApplicationIT {
 
         UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, user2.getEmail(), null);
 
-        HttpEntity<@NotNull UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
+        HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user1.getId());
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.PUT, requestUpdate, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
@@ -290,9 +289,9 @@ class UserServiceApplicationIT {
 
         UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan2", "ivan2@test", null);
 
-        HttpEntity<@NotNull UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
+        HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user.getId());
-        ResponseEntity<@NotNull UserResponse> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<UserResponse> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.PUT, requestUpdate, UserResponse.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -320,9 +319,9 @@ class UserServiceApplicationIT {
 
         UpdateUserRequest updateUserRequest = new UpdateUserRequest(null, null, LocalDate.parse("2018-02-02"));
 
-        HttpEntity<@NotNull UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
+        HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
         String url = String.format(API_USERS_ID_URL, user.getId());
-        ResponseEntity<@NotNull UserResponse> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<UserResponse> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.PUT, requestUpdate, UserResponse.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -347,7 +346,7 @@ class UserServiceApplicationIT {
     void testDeleteUserWhenNonExistent() {
         Long id = 1L;
         String url = String.format(API_USERS_ID_URL, id);
-        ResponseEntity<@NotNull MessageError> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.DELETE, null, MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -367,7 +366,7 @@ class UserServiceApplicationIT {
         userRepository.save(user);
 
         String url = String.format(API_USERS_ID_URL, user.getId());
-        ResponseEntity<@NotNull UserResponse> responseEntity = testRestTemplate.exchange(
+        ResponseEntity<UserResponse> responseEntity = testRestTemplate.exchange(
                 url, HttpMethod.DELETE, null, UserResponse.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
