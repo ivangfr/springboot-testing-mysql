@@ -6,7 +6,7 @@ Guidance for agentic coding agents working in this repository.
 
 ## Project Overview
 
-A Spring Boot 4.0.3 / Java 25 REST service (`user-service`) backed by MySQL.
+A Spring Boot 4.0.4 / Java 25 REST service (`user-service`) backed by MySQL.
 Single Maven module under the `user-service/` directory. The parent `pom.xml`
 at the root only handles module aggregation.
 
