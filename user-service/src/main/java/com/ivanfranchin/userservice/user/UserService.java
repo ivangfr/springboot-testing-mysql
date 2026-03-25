@@ -33,11 +33,11 @@ public class UserService {
 
     public User validateAndGetUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with id '%s' doesn't exist.", id)));
+                .orElseThrow(() -> new UserNotFoundException("User with id '%s' doesn't exist.".formatted(id)));
     }
 
     public User validateAndGetUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with username '%s' doesn't exist.", username)));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username '%s' doesn't exist.".formatted(username)));
     }
 }

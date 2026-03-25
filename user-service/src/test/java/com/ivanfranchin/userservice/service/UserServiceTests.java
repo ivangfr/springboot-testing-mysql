@@ -1,13 +1,15 @@
 package com.ivanfranchin.userservice.service;
 
-import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
-import com.ivanfranchin.userservice.user.model.User;
 import com.ivanfranchin.userservice.user.UserRepository;
 import com.ivanfranchin.userservice.user.UserService;
+import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
+import com.ivanfranchin.userservice.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,11 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @Import(UserService.class)
@@ -40,6 +44,26 @@ class UserServiceTests {
 
         User userSaved = userService.saveUser(user);
         assertThat(userSaved).isEqualTo(user);
+    }
+
+    @Test
+    void testSaveUserWhenDataIntegrityViolationOccurs() {
+        User user = getDefaultUser();
+        given(userRepository.save(any(User.class))).willThrow(DataIntegrityViolationException.class);
+
+        assertThatThrownBy(() -> userService.saveUser(user))
+                .isInstanceOf(UserDataDuplicatedException.class)
+                .hasMessage("The username and/or email informed already exists.");
+    }
+
+    @Test
+    void testDeleteUser() {
+        User user = getDefaultUser();
+        willDoNothing().given(userRepository).delete(any(User.class));
+
+        userService.deleteUser(user);
+
+        verify(userRepository).delete(user);
     }
 
     @Test
@@ -75,15 +99,15 @@ class UserServiceTests {
     void testValidateAndGetUserByIdWhenNonExisting() {
         given(userRepository.findById(anyLong())).willReturn(Optional.empty());
 
-        Throwable exception = assertThrows(UserNotFoundException.class,
-                () -> userService.validateAndGetUserById(1L));
-        assertThat(exception.getMessage()).isEqualTo("User with id '1' doesn't exist.");
+        assertThatThrownBy(() -> userService.validateAndGetUserById(1L))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User with id '1' doesn't exist.");
     }
 
     @Test
     void testValidateAndGetUserByUsernameWhenExisting() {
         User user = getDefaultUser();
-        given(userRepository.findUserByUsername(anyString())).willReturn(Optional.of(user));
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.of(user));
 
         User userFound = userService.validateAndGetUserByUsername(user.getUsername());
         assertThat(userFound).isEqualTo(user);
@@ -91,11 +115,11 @@ class UserServiceTests {
 
     @Test
     void testValidateAndGetUserByUsernameWhenNonExisting() {
-        given(userRepository.findUserByUsername(anyString())).willReturn(Optional.empty());
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
 
-        Throwable exception = assertThrows(UserNotFoundException.class,
-                () -> userService.validateAndGetUserByUsername("ivan"));
-        assertThat(exception.getMessage()).isEqualTo("User with username 'ivan' doesn't exist.");
+        assertThatThrownBy(() -> userService.validateAndGetUserByUsername("ivan"))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User with username 'ivan' doesn't exist.");
     }
 
     private User getDefaultUser() {

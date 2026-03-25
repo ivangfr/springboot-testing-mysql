@@ -1,7 +1,5 @@
 package com.ivanfranchin.userservice.user.model;
 
-import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,13 +9,15 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -38,7 +38,7 @@ public class User {
 
     private LocalDate birthday;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Instant createdOn;
 
     @Column(nullable = false)
@@ -51,32 +51,12 @@ public class User {
     }
 
     @PrePersist
-    public void onPrePersist() {
+    protected void onPrePersist() {
         createdOn = updatedOn = Instant.now();
     }
 
     @PreUpdate
-    public void onPreUpdate() {
+    protected void onPreUpdate() {
         updatedOn = Instant.now();
-    }
-
-    public static User from(CreateUserRequest createUserRequest) {
-        return new User(
-                createUserRequest.username(),
-                createUserRequest.email(),
-                createUserRequest.birthday()
-        );
-    }
-
-    public static void updateFrom(UpdateUserRequest updateUserRequest, User user) {
-        if (updateUserRequest.username() != null) {
-            user.setUsername(updateUserRequest.username());
-        }
-        if (updateUserRequest.email() != null) {
-            user.setEmail(updateUserRequest.email());
-        }
-        if (updateUserRequest.birthday() != null) {
-            user.setBirthday(updateUserRequest.birthday());
-        }
     }
 }

@@ -5,15 +5,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ivanfranchin</groupId>
     <artifactId>springboot-testing-mysql</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>springboot-testing-mysql</name>
-    <description>Demo project for Spring Boot</description>
+    <name/>
+    <description/>
     <url/>
     <licenses>
         <license/>

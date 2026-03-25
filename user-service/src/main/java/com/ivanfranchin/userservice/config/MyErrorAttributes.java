@@ -26,20 +26,21 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
             String statusError = (String) errorAttributes.get("error");
             errorCode = statusError.replaceAll("\\s+", "");
         }
+        errorAttributes.remove("exception");
         errorAttributes.put("errorCode", errorCode);
         return errorAttributes;
     }
 
     private static class ErrorCodeHandler {
-        private static final Map<String, String> map = new HashMap<>();
+        private static final Map<String, String> ERROR_CODE_MAP = new HashMap<>();
 
         static {
-            map.put(UserNotFoundException.class.getName(), ErrorCode.USER_NOT_FOUND.getDescription());
-            map.put(UserDataDuplicatedException.class.getName(), ErrorCode.USER_DATA_DUPLICATED.getDescription());
+            ERROR_CODE_MAP.put(UserNotFoundException.class.getName(), ErrorCode.USER_NOT_FOUND.getDescription());
+            ERROR_CODE_MAP.put(UserDataDuplicatedException.class.getName(), ErrorCode.USER_DATA_DUPLICATED.getDescription());
         }
 
         static String getErrorCode(String className) {
-            return map.get(className);
+            return ERROR_CODE_MAP.get(className);
         }
     }
 
