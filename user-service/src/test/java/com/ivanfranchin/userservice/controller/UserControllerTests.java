@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
@@ -52,7 +51,7 @@ class UserControllerTests {
 
     @Test
     void testGetUsersWhenThereIsNone() throws Exception {
-        given(userService.getUsers()).willReturn(Collections.emptyList());
+        given(userService.getUsers()).willReturn(List.of());
 
         ResultActions resultActions = mockMvc.perform(get(API_USERS_URL))
                 .andDo(print());
@@ -65,7 +64,7 @@ class UserControllerTests {
     @Test
     void testGetUsersWhenThereIsOne() throws Exception {
         User user = getDefaultUser();
-        List<User> users = Collections.singletonList(user);
+        List<User> users = List.of(user);
 
         given(userService.getUsers()).willReturn(users);
 
@@ -106,33 +105,6 @@ class UserControllerTests {
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testGetUserByUsernameWhenNonExistent() throws Exception {
-        given(userService.validateAndGetUserByUsername(anyString())).willThrow(UserNotFoundException.class);
-
-        ResultActions resultActions = mockMvc.perform(get(API_USERS_USERNAME_USERNAME_URL, "test"))
-                .andDo(print());
-
-        resultActions.andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testGetUserByUsernameWhenExistent() throws Exception {
-        User user = getDefaultUser();
-
-        given(userService.validateAndGetUserByUsername(anyString())).willReturn(user);
-
-        ResultActions resultActions = mockMvc.perform(get(API_USERS_USERNAME_USERNAME_URL, user.getUsername()))
-                .andDo(print());
-
-        resultActions.andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
-                .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
-                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
-                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -190,6 +162,38 @@ class UserControllerTests {
                 .andDo(print());
 
         resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testCreateUserNotInformingBirthday() throws Exception {
+        CreateUserRequest createUserRequest = new CreateUserRequest("ivan", "ivan@test", null);
+
+        ResultActions resultActions = mockMvc.perform(post(API_USERS_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createUserRequest)))
+                .andDo(print());
+
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateUserWhenNoFieldChanges() throws Exception {
+        User user = getDefaultUser();
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(user.getUsername(), null, null);
+
+        given(userService.validateAndGetUserById(anyLong())).willReturn(user);
+
+        ResultActions resultActions = mockMvc.perform(patch(API_USERS_ID_URL, user.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateUserRequest)))
+                .andDo(print());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath(JSON_$_ID, is(user.getId().intValue())))
+                .andExpect(jsonPath(JSON_$_USERNAME, is(user.getUsername())))
+                .andExpect(jsonPath(JSON_$_EMAIL, is(user.getEmail())))
+                .andExpect(jsonPath(JSON_$_BIRTHDAY, is(user.getBirthday().format(ISO_LOCAL_DATE))));
     }
 
     @Test
@@ -335,7 +339,6 @@ class UserControllerTests {
 
     private static final String API_USERS_URL = "/api/users";
     private static final String API_USERS_ID_URL = "/api/users/{id}";
-    private static final String API_USERS_USERNAME_USERNAME_URL = "/api/users/username/{username}";
 
     private static final String JSON_$ = "$";
 

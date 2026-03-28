@@ -26,7 +26,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
   ```text
      GET /api/users
      GET /api/users/{id}
-     GET /api/users/username/{username}
+     GET /api/users?username={username}
     POST /api/users {"username":"...", "email":"...", "birthday":"..."}
    PATCH /api/users/{id} {"username":"...", "email":"...", "birthday":"..."}
   DELETE /api/users/{id}

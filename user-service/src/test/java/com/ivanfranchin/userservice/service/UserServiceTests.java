@@ -14,7 +14,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +67,7 @@ class UserServiceTests {
 
     @Test
     void testGetUsersWhenThereIsNone() {
-        given(userRepository.findAll()).willReturn(Collections.emptyList());
+        given(userRepository.findAll()).willReturn(List.of());
 
         List<User> usersFound = userService.getUsers();
         assertThat(usersFound).isEmpty();
@@ -77,7 +76,7 @@ class UserServiceTests {
     @Test
     void testGetUsersWhenThereIsOne() {
         User user = getDefaultUser();
-        List<User> users = Collections.singletonList(user);
+        List<User> users = List.of(user);
 
         given(userRepository.findAll()).willReturn(users);
 

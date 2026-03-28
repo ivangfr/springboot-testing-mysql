@@ -101,12 +101,12 @@ class UserServiceApplicationIT {
         assertThat(responseEntity.getBody().birthday()).isEqualTo(user.getBirthday());
     }
 
-    /* GET /api/users/username/{username} */
+    /* GET /api/users?username= */
 
     @Test
     void testGetUserByUsernameWhenNonExistent() {
-        String url = String.format(API_USERS_USERNAME_USERNAME_URL, "ivan");
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity(url, MessageError.class);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.getForEntity(
+                API_USERS_URL + "?username=ivan", MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -114,7 +114,7 @@ class UserServiceApplicationIT {
         assertThat(responseEntity.getBody().status()).isEqualTo(404);
         assertThat(responseEntity.getBody().error()).isEqualTo(ERROR_NOT_FOUND);
         assertThat(responseEntity.getBody().message()).isEqualTo("User with username 'ivan' doesn't exist.");
-        assertThat(responseEntity.getBody().path()).isEqualTo(url);
+        assertThat(responseEntity.getBody().path()).isEqualTo(API_USERS_URL);
         assertThat(responseEntity.getBody().errorCode()).isEqualTo(ERROR_CODE_NOT_FOUND);
         assertThat(responseEntity.getBody().errors()).isNull();
     }
@@ -124,15 +124,16 @@ class UserServiceApplicationIT {
         User user = getDefaultUser();
         userRepository.save(user);
 
-        String url = String.format(API_USERS_USERNAME_USERNAME_URL, user.getUsername());
-        ResponseEntity<UserResponse> responseEntity = testRestTemplate.getForEntity(url, UserResponse.class);
+        ResponseEntity<UserResponse[]> responseEntity = testRestTemplate.getForEntity(
+                API_USERS_URL + "?username=" + user.getUsername(), UserResponse[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().id()).isEqualTo(user.getId());
-        assertThat(responseEntity.getBody().username()).isEqualTo(user.getUsername());
-        assertThat(responseEntity.getBody().email()).isEqualTo(user.getEmail());
-        assertThat(responseEntity.getBody().birthday()).isEqualTo(user.getBirthday());
+        assertThat(responseEntity.getBody()).hasSize(1);
+        assertThat(responseEntity.getBody()[0].id()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody()[0].username()).isEqualTo(user.getUsername());
+        assertThat(responseEntity.getBody()[0].email()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody()[0].birthday()).isEqualTo(user.getBirthday());
     }
 
     /* POST /api/users */
@@ -151,7 +152,7 @@ class UserServiceApplicationIT {
         assertThat(responseEntity.getBody().birthday()).isEqualTo(createUserRequest.birthday());
 
         Optional<User> userOptional = userRepository.findById(responseEntity.getBody().id());
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         userOptional.ifPresent(userCreated -> {
             assertThat(userCreated.getUsername()).isEqualTo(createUserRequest.username());
             assertThat(userCreated.getEmail()).isEqualTo(createUserRequest.email());
@@ -269,6 +270,26 @@ class UserServiceApplicationIT {
     /* PATCH /api/users/{id} */
 
     @Test
+    void testUpdateUserWhenNoFieldChanges() {
+        User user = getDefaultUser();
+        userRepository.save(user);
+
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest(user.getUsername(), null, null);
+
+        HttpEntity<UpdateUserRequest> requestUpdate = new HttpEntity<>(updateUserRequest);
+        String url = String.format(API_USERS_ID_URL, user.getId());
+        ResponseEntity<UserResponse> responseEntity = testRestTemplate.exchange(
+                url, HttpMethod.PATCH, requestUpdate, UserResponse.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody().id()).isEqualTo(user.getId());
+        assertThat(responseEntity.getBody().username()).isEqualTo(user.getUsername());
+        assertThat(responseEntity.getBody().email()).isEqualTo(user.getEmail());
+        assertThat(responseEntity.getBody().birthday()).isEqualTo(user.getBirthday());
+    }
+
+    @Test
     void testUpdateUserWhenNonExisting() {
         Long id = 1L;
         UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
@@ -356,7 +377,7 @@ class UserServiceApplicationIT {
         assertThat(responseEntity.getBody().birthday()).isEqualTo(user.getBirthday());
 
         Optional<User> userOptional = userRepository.findById(responseEntity.getBody().id());
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         userOptional.ifPresent(userUpdated -> {
             assertThat(userUpdated.getUsername()).isEqualTo(updateUserRequest.username());
             assertThat(userUpdated.getEmail()).isEqualTo(updateUserRequest.email());
@@ -386,7 +407,7 @@ class UserServiceApplicationIT {
         assertThat(responseEntity.getBody().birthday()).isEqualTo(updateUserRequest.birthday());
 
         Optional<User> userOptional = userRepository.findById(responseEntity.getBody().id());
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         userOptional.ifPresent(userUpdated -> {
             assertThat(userUpdated.getUsername()).isEqualTo(updateUserRequest.username());
             assertThat(userUpdated.getEmail()).isEqualTo(user.getEmail());
@@ -443,7 +464,6 @@ class UserServiceApplicationIT {
 
     private static final String API_USERS_URL = "/api/users";
     private static final String API_USERS_ID_URL = "/api/users/%s";
-    private static final String API_USERS_USERNAME_USERNAME_URL = "/api/users/username/%s";
 
     private static final String ERROR_NOT_FOUND = "Not Found";
     private static final String ERROR_CODE_NOT_FOUND = "UserNotFound";

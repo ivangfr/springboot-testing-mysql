@@ -6,7 +6,7 @@ Guidance for agentic coding agents working in this repository.
 
 ## Project Overview
 
-A Spring Boot 4.0.4 / Java 25 REST service (`user-service`) backed by MySQL.
+A Spring Boot 4.0.5 / Java 25 REST service (`user-service`) backed by MySQL.
 Single Maven module under the `user-service/` directory. The parent `pom.xml`
 at the root only handles module aggregation.
 
@@ -120,9 +120,15 @@ Use **Java records** for all request and response DTOs.
       }
   }
   ```
-- **Update request DTOs** carry an `applyTo(Entity)` instance method that applies non-null fields to an existing entity:
+- **Update request DTOs** carry a `hasChanges(Entity)` method that checks whether any field differs from the entity, and an `applyTo(Entity)` instance method that applies non-null fields to an existing entity:
   ```java
   public record UpdateUserRequest(String username, String email, LocalDate birthday) {
+      public boolean hasChanges(User user) {
+          return (username() != null && !username().equals(user.getUsername()))
+                  || (email() != null && !email().equals(user.getEmail()))
+                  || (birthday() != null && !birthday().equals(user.getBirthday()));
+      }
+
       public void applyTo(User user) {
           if (username() != null) user.setUsername(username());
           if (email() != null)    user.setEmail(email());

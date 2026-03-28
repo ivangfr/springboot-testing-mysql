@@ -9,15 +9,13 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -36,6 +34,7 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private LocalDate birthday;
 
     @Column(nullable = false, updatable = false)

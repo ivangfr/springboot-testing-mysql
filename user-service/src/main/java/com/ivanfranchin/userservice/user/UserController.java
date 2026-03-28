@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,11 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponse> getUsers() {
+    public List<UserResponse> getUsers(@RequestParam(required = false) String username) {
+        if (username != null) {
+            User user = userService.validateAndGetUserByUsername(username);
+            return List.of(UserResponse.from(user));
+        }
         return userService.getUsers()
                 .stream()
                 .map(UserResponse::from)
@@ -37,12 +42,6 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponse getUserById(@PathVariable Long id) {
         User user = userService.validateAndGetUserById(id);
-        return UserResponse.from(user);
-    }
-
-    @GetMapping("/username/{username}")
-    public UserResponse getUserByUsername(@PathVariable String username) {
-        User user = userService.validateAndGetUserByUsername(username);
         return UserResponse.from(user);
     }
 
@@ -57,8 +56,11 @@ public class UserController {
     @PatchMapping("/{id}")
     public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User user = userService.validateAndGetUserById(id);
+        boolean changed = updateUserRequest.hasChanges(user);
         updateUserRequest.applyTo(user);
-        user = userService.saveUser(user);
+        if (changed) {
+            user = userService.saveUser(user);
+        }
         return UserResponse.from(user);
     }
 

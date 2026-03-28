@@ -1,6 +1,7 @@
 package com.ivanfranchin.userservice.dto;
 
 import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
@@ -46,5 +47,29 @@ class UpdateUserRequestTests {
         assertThat(updateUserRequest.username()).isEqualTo("ivan");
         assertThat(updateUserRequest.email()).isEqualTo("ivan@test");
         assertThat(updateUserRequest.birthday()).isEqualTo(LocalDate.parse("2018-01-01"));
+    }
+
+    @Test
+    void testHasChangesWhenUsernameIsDifferent() {
+        User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+        UpdateUserRequest request = new UpdateUserRequest("ivan2", null, null);
+
+        assertThat(request.hasChanges(user)).isTrue();
+    }
+
+    @Test
+    void testHasChangesWhenAllFieldsMatch() {
+        User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+        UpdateUserRequest request = new UpdateUserRequest("ivan", null, null);
+
+        assertThat(request.hasChanges(user)).isFalse();
+    }
+
+    @Test
+    void testHasChangesWhenAllFieldsAreNull() {
+        User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+        UpdateUserRequest request = new UpdateUserRequest(null, null, null);
+
+        assertThat(request.hasChanges(user)).isFalse();
     }
 }

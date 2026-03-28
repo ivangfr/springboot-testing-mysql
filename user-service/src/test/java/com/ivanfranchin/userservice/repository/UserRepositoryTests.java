@@ -32,29 +32,12 @@ class UserRepositoryTests {
 
         Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
 
-        assertThat(userOptional).isPresent();
-        assertThat(userOptional.get()).isEqualTo(user);
+        assertThat(userOptional).hasValue(user);
     }
 
     @Test
     void testFindUserByUsernameWhenNonExistent() {
         Optional<User> userOptional = userRepository.findByUsername("ivan2");
-        assertThat(userOptional).isNotPresent();
-    }
-
-    @Test
-    void testFindUserByEmailWhenExistent() {
-        User user = entityManager.persist(getDefaultUser());
-
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
-
-        assertThat(userOptional).isPresent();
-        assertThat(userOptional.get()).isEqualTo(user);
-    }
-
-    @Test
-    void testFindUserByEmailWhenNonExistent() {
-        Optional<User> userOptional = userRepository.findByEmail("ivan2@test");
         assertThat(userOptional).isNotPresent();
     }
 

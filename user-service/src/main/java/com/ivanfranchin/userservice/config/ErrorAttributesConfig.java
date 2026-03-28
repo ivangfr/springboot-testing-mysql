@@ -14,19 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class MyErrorAttributes extends DefaultErrorAttributes {
+public class ErrorAttributesConfig extends DefaultErrorAttributes {
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions errorAttributeOptions) {
+        Throwable error = getError(webRequest);
+        String exceptionClassName = error != null ? error.getClass().getName() : null;
         Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest,
-                errorAttributeOptions.including(Include.EXCEPTION, Include.MESSAGE, Include.BINDING_ERRORS));
-        String exceptionClassName = (String) errorAttributes.get("exception");
+                errorAttributeOptions.including(Include.MESSAGE, Include.BINDING_ERRORS));
         String errorCode = ErrorCodeHandler.getErrorCode(exceptionClassName);
         if (errorCode == null) {
             String statusError = (String) errorAttributes.get("error");
             errorCode = statusError.replaceAll("\\s+", "");
         }
-        errorAttributes.remove("exception");
         errorAttributes.put("errorCode", errorCode);
         return errorAttributes;
     }

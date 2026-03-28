@@ -3,10 +3,11 @@ services:
   mysql:
     image: 'mysql:9.6.0'
     container_name: 'mysql'
+    restart: 'unless-stopped'
     ports:
       - '3306:3306'
     environment:
       - 'MYSQL_ROOT_PASSWORD=secret'
       - 'MYSQL_DATABASE=userdb'
     healthcheck:
-      test: 'mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}'
+      test: ["CMD", "mysqladmin", "ping", "-u", "root", "--password=$$MYSQL_ROOT_PASSWORD"]
