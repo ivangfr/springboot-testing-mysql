@@ -6,7 +6,7 @@ Guidance for agentic coding agents working in this repository.
 
 ## Project Overview
 
-A Spring Boot 4.0.5 / Java 25 REST service (`user-service`) backed by MySQL.
+A Spring Boot 4.0.6 / Java 25 REST service (`user-service`) backed by MySQL.
 Single Maven module under the `user-service/` directory. The parent `pom.xml`
 at the root only handles module aggregation.
 
@@ -69,7 +69,7 @@ no manual Docker setup is needed to run them.
 user-service/src/main/java/com/ivanfranchin/userservice/
 ├── UserServiceApplication.java          # @SpringBootApplication entry point
 ├── config/
-│   ├── MyErrorAttributes.java           # Custom error response body
+│   ├── ErrorAttributesConfig.java         # Custom error response body
 │   └── SwaggerConfig.java               # OpenAPI / Swagger UI config
 └── user/                                # Feature package (domain-first layout)
     ├── UserController.java
