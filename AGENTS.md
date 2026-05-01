@@ -94,11 +94,13 @@ New features get their own sub-package (e.g., `com.ivanfranchin.userservice.orde
 ## Code Style Guidelines
 
 ### General Formatting
-- **Indentation**: 4 spaces (no tabs)
+- **Indentation**: 2 spaces (Google Java Format default, enforced by Spotless)
 - **Braces**: K&R style — opening brace on the same line
 - **Blank lines**: one blank line between methods
-- **Line length**: keep lines reasonably short; no enforced hard limit
-- **No wildcard imports**: always use fully-qualified single-type imports
+- **Line length**: 100 characters (enforced by .editorconfig)
+- **No wildcard imports**: always use fully-qualified single-type imports (enforced by Spotless)
+- **Import order**: `java.*` → `jakarta.*` → `org.*` → `com.*` (enforced by Spotless)
+- **Automated formatting**: Run `./mvnw spotless:apply` to auto-format code
 
 ### Naming Conventions
 - Classes: `PascalCase` (e.g., `UserController`, `CreateUserRequest`)
@@ -276,8 +278,12 @@ method to guarantee a clean state before each test.
 
 ---
 
-## No External Style Enforcement
+## Code Formatting Enforcement
 
-There are no Checkstyle, PMD, Spotless, `.editorconfig`, `.cursorrules`, or
-Copilot instruction files in this repository. Follow the conventions described
-in this document and match the style of surrounding code.
+This project uses **Spotless Maven Plugin** with **Google Java Format** for automated code formatting.
+
+- **Auto-format code**: `./mvnw spotless:apply`
+- **Check formatting**: `./mvnw spotless:check` (runs automatically during `./mvnw verify`)
+- **`.editorconfig`** is present at the repository root for consistent editor behavior
+
+The formatting rules are enforced automatically — no manual formatting is needed.

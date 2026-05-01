@@ -6,9 +6,9 @@ import org.testcontainers.mysql.MySQLContainer;
 
 public interface MySQLTestcontainers {
 
-    @Container
-    @ServiceConnection
-    MySQLContainer mySQLContainer = new MySQLContainer("mysql:9.6.0")
-            .withUrlParam("characterEncoding", "UTF-8")
-            .withUrlParam("serverTimezone", "UTC");
+  @Container @ServiceConnection
+  MySQLContainer mySQLContainer =
+      new MySQLContainer("mysql:9.6.0")
+          .withUrlParam("characterEncoding", "UTF-8")
+          .withUrlParam("serverTimezone", "UTC");
 }

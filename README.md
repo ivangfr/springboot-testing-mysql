@@ -130,6 +130,21 @@ A shared `MySQLTestcontainers` interface holds the `@ServiceConnection MySQLCont
     ./mvnw verify --projects user-service -Dit.test=UserServiceApplicationIT#testCreateUser
     ```
 
+## Code Formatting
+
+This project enforces consistent Java formatting using the [Spotless](https://github.com/diffplug/spotless) Maven plugin with [google-java-format](https://github.com/google/google-java-format) (GOOGLE style).
+
+- **Check formatting**:
+  ```bash
+  ./mvnw spotless:check
+  ```
+- **Auto-fix formatting**:
+  ```bash
+  ./mvnw spotless:apply
+  ```
+
+Formatting is also verified automatically as part of `./mvnw verify` (bound to the `verify` phase).
+
 ## How to optimize PNGs in documentation folder
 
 [**Medium**] [**How I Reduce GIF and Screenshot Sizes for My Technical Articles on macOS**](https://medium.com/itnext/how-i-reduce-gif-and-screenshot-sizes-for-my-technical-articles-on-macos-7fea331afc68)

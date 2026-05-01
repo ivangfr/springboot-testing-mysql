@@ -1,75 +1,79 @@
 package com.ivanfranchin.userservice.dto;
 
-import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
-import com.ivanfranchin.userservice.user.model.User;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 
-import java.io.IOException;
-import java.time.LocalDate;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.model.User;
 
 @JsonTest
 class UpdateUserRequestTests {
 
-    @Autowired
-    private JacksonTester<UpdateUserRequest> jacksonTester;
+  @Autowired private JacksonTester<UpdateUserRequest> jacksonTester;
 
-    @Test
-    void testSerialize() throws IOException {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+  @Test
+  void testSerialize() throws IOException {
+    UpdateUserRequest updateUserRequest =
+        new UpdateUserRequest("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
 
-        JsonContent<UpdateUserRequest> jsonContent = jacksonTester.write(updateUserRequest);
+    JsonContent<UpdateUserRequest> jsonContent = jacksonTester.write(updateUserRequest);
 
-        assertThat(jsonContent)
-                .hasJsonPathStringValue("@.username")
-                .extractingJsonPathStringValue("@.username").isEqualTo("ivan");
+    assertThat(jsonContent)
+        .hasJsonPathStringValue("@.username")
+        .extractingJsonPathStringValue("@.username")
+        .isEqualTo("ivan");
 
-        assertThat(jsonContent)
-                .hasJsonPathStringValue("@.email")
-                .extractingJsonPathStringValue("@.email").isEqualTo("ivan@test");
+    assertThat(jsonContent)
+        .hasJsonPathStringValue("@.email")
+        .extractingJsonPathStringValue("@.email")
+        .isEqualTo("ivan@test");
 
-        assertThat(jsonContent)
-                .hasJsonPathStringValue("@.birthday")
-                .extractingJsonPathStringValue("@.birthday").isEqualTo("2018-01-01");
-    }
+    assertThat(jsonContent)
+        .hasJsonPathStringValue("@.birthday")
+        .extractingJsonPathStringValue("@.birthday")
+        .isEqualTo("2018-01-01");
+  }
 
-    @Test
-    void testDeserialize() throws IOException {
-        String content = "{\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
+  @Test
+  void testDeserialize() throws IOException {
+    String content = "{\"username\":\"ivan\",\"email\":\"ivan@test\",\"birthday\":\"2018-01-01\"}";
 
-        UpdateUserRequest updateUserRequest = jacksonTester.parseObject(content);
+    UpdateUserRequest updateUserRequest = jacksonTester.parseObject(content);
 
-        assertThat(updateUserRequest.username()).isEqualTo("ivan");
-        assertThat(updateUserRequest.email()).isEqualTo("ivan@test");
-        assertThat(updateUserRequest.birthday()).isEqualTo(LocalDate.parse("2018-01-01"));
-    }
+    assertThat(updateUserRequest.username()).isEqualTo("ivan");
+    assertThat(updateUserRequest.email()).isEqualTo("ivan@test");
+    assertThat(updateUserRequest.birthday()).isEqualTo(LocalDate.parse("2018-01-01"));
+  }
 
-    @Test
-    void testHasChangesWhenUsernameIsDifferent() {
-        User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
-        UpdateUserRequest request = new UpdateUserRequest("ivan2", null, null);
+  @Test
+  void testHasChangesWhenUsernameIsDifferent() {
+    User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+    UpdateUserRequest request = new UpdateUserRequest("ivan2", null, null);
 
-        assertThat(request.hasChanges(user)).isTrue();
-    }
+    assertThat(request.hasChanges(user)).isTrue();
+  }
 
-    @Test
-    void testHasChangesWhenAllFieldsMatch() {
-        User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
-        UpdateUserRequest request = new UpdateUserRequest("ivan", null, null);
+  @Test
+  void testHasChangesWhenAllFieldsMatch() {
+    User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+    UpdateUserRequest request = new UpdateUserRequest("ivan", null, null);
 
-        assertThat(request.hasChanges(user)).isFalse();
-    }
+    assertThat(request.hasChanges(user)).isFalse();
+  }
 
-    @Test
-    void testHasChangesWhenAllFieldsAreNull() {
-        User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
-        UpdateUserRequest request = new UpdateUserRequest(null, null, null);
+  @Test
+  void testHasChangesWhenAllFieldsAreNull() {
+    User user = new User("ivan", "ivan@test", LocalDate.parse("2018-01-01"));
+    UpdateUserRequest request = new UpdateUserRequest(null, null, null);
 
-        assertThat(request.hasChanges(user)).isFalse();
-    }
+    assertThat(request.hasChanges(user)).isFalse();
+  }
 }
