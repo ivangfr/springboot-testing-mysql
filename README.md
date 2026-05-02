@@ -12,9 +12,29 @@ The goals of this project are to:
 
 On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-Concepts (PoCs) and articles. You can easily search for the technology you are interested in by using the filter. Who knows, perhaps I have already implemented a PoC or written an article about what you are looking for.
 
-## Project Diagram
+## Project Overview
 
-![project-diagram](documentation/project-diagram.png)
+```mermaid
+flowchart LR
+    subgraph Clients
+        HTTP[HTTP Requests]
+        Browser[Browser]
+    end
+
+    subgraph "user-service (Spring Boot)"
+        REST[REST API]
+        Swagger[Swagger UI]
+    end
+
+    subgraph "MySQL"
+        Table[users table]
+    end
+
+    HTTP <--> REST
+    Browser -->|loads| Swagger
+    REST <--> Table
+    Swagger <--> REST
+```
 
 ## Application
 
@@ -144,10 +164,6 @@ This project enforces consistent Java formatting using the [Spotless](https://gi
   ```
 
 Formatting is also verified automatically as part of `./mvnw verify` (bound to the `verify` phase).
-
-## How to optimize PNGs in documentation folder
-
-[**Medium**] [**How I Reduce GIF and Screenshot Sizes for My Technical Articles on macOS**](https://medium.com/itnext/how-i-reduce-gif-and-screenshot-sizes-for-my-technical-articles-on-macos-7fea331afc68)
 
 ## Support
 
