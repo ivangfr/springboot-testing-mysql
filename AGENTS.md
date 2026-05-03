@@ -10,28 +10,6 @@ A Spring Boot 4.0.6 / Java 25 REST service (`user-service`) backed by MySQL.
 Single Maven module under the `user-service/` directory. The parent `pom.xml`
 at the root only handles module aggregation.
 
-```mermaid
-flowchart LR
-    subgraph Clients
-        HTTP[HTTP Requests]
-        Browser[Browser]
-    end
-
-    subgraph "user-service (Spring Boot)"
-        REST[REST API]
-        Swagger[Swagger UI]
-    end
-
-    subgraph "MySQL"
-        Table[users table]
-    end
-
-    HTTP <--> REST
-    Browser -->|loads| Swagger
-    REST <--> Table
-    Swagger <--> REST
-```
-
 ---
 
 ## Build & Run Commands

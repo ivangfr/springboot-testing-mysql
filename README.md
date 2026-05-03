@@ -16,24 +16,24 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ```mermaid
 flowchart LR
-    subgraph Clients
-        HTTP[HTTP Requests]
-        Browser[Browser]
+    subgraph users ["Users"]
+        HTTP["REST Clients"]
+        Browser["Browser"]
     end
 
-    subgraph "user-service (Spring Boot)"
-        REST[REST API]
-        Swagger[Swagger UI]
+    subgraph user-service ["user-service:8080\n(Spring Boot)"]
+        RestCtrl["UserController"]
+        SwaggerUI["Swagger UI"]
     end
 
-    subgraph "MySQL"
-        Table[users table]
+    subgraph mysql ["MySQL"]
+        db[("users")]
     end
 
-    HTTP <--> REST
-    Browser -->|loads| Swagger
-    REST <--> Table
-    Swagger <--> REST
+    HTTP -->|"calls"| RestCtrl
+    Browser -->|"accesses"| SwaggerUI
+    RestCtrl -->|"queries"| db
+    SwaggerUI -->|"uses"| RestCtrl
 ```
 
 ## Application
