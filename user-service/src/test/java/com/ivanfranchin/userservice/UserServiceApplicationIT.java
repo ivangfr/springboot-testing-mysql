@@ -2,10 +2,14 @@ package com.ivanfranchin.userservice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ivanfranchin.userservice.user.UserRepository;
+import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.dto.UserResponse;
+import com.ivanfranchin.userservice.user.model.User;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +22,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import com.ivanfranchin.userservice.user.UserRepository;
-import com.ivanfranchin.userservice.user.dto.CreateUserRequest;
-import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
-import com.ivanfranchin.userservice.user.dto.UserResponse;
-import com.ivanfranchin.userservice.user.model.User;
 
 @AutoConfigureTestRestTemplate
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

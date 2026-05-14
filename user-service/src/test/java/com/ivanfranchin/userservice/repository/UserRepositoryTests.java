@@ -3,19 +3,17 @@ package com.ivanfranchin.userservice.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.ivanfranchin.userservice.MySQLTestcontainers;
+import com.ivanfranchin.userservice.user.UserRepository;
+import com.ivanfranchin.userservice.user.model.User;
 import java.time.LocalDate;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import com.ivanfranchin.userservice.MySQLTestcontainers;
-import com.ivanfranchin.userservice.user.UserRepository;
-import com.ivanfranchin.userservice.user.model.User;
 
 @DataJpaTest
 @ImportTestcontainers(MySQLTestcontainers.class)

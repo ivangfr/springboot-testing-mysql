@@ -1,15 +1,12 @@
 package com.ivanfranchin.userservice.user;
 
-import java.util.List;
-
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-
 import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
 import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
 import com.ivanfranchin.userservice.user.model.User;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service

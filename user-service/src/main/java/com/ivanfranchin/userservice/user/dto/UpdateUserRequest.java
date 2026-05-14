@@ -1,16 +1,13 @@
 package com.ivanfranchin.userservice.user.dto;
 
-import java.time.LocalDate;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.ivanfranchin.userservice.user.model.User;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 public record UpdateUserRequest(
     @Schema(example = "ivan2.franchin") @Size(max = 100) String username,

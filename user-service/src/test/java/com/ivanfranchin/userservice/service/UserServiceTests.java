@@ -9,10 +9,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
+import com.ivanfranchin.userservice.user.UserRepository;
+import com.ivanfranchin.userservice.user.UserService;
+import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
+import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
+import com.ivanfranchin.userservice.user.model.User;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +24,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.ivanfranchin.userservice.user.UserRepository;
-import com.ivanfranchin.userservice.user.UserService;
-import com.ivanfranchin.userservice.user.exception.UserDataDuplicatedException;
-import com.ivanfranchin.userservice.user.exception.UserNotFoundException;
-import com.ivanfranchin.userservice.user.model.User;
 
 @ExtendWith(SpringExtension.class)
 @Import(UserService.class)

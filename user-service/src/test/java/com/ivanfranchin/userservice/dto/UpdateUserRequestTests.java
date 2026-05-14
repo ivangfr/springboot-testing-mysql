@@ -2,17 +2,15 @@ package com.ivanfranchin.userservice.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
+import com.ivanfranchin.userservice.user.model.User;
 import java.io.IOException;
 import java.time.LocalDate;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-
-import com.ivanfranchin.userservice.user.dto.UpdateUserRequest;
-import com.ivanfranchin.userservice.user.model.User;
 
 @JsonTest
 class UpdateUserRequestTests {

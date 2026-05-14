@@ -1,17 +1,14 @@
 package com.ivanfranchin.userservice.user.dto;
 
-import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ivanfranchin.userservice.user.model.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ivanfranchin.userservice.user.model.User;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
 
 public record CreateUserRequest(
     @Schema(example = "ivan.franchin") @NotBlank @Size(max = 100) String username,
