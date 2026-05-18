@@ -12,7 +12,7 @@
     <artifactId>springboot-testing-mysql</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name/>
+    <name>springboot-testing-mysql</name>
     <description/>
     <url/>
     <licenses>
