@@ -158,12 +158,13 @@ This project enforces consistent Java formatting using the [Spotless](https://gi
   ```bash
   ./mvnw spotless:check
   ```
+
 - **Auto-fix formatting**:
   ```bash
   ./mvnw spotless:apply
   ```
 
-Formatting is also verified automatically as part of `./mvnw verify` (bound to the `verify` phase).
+Formatting is enforced automatically during `./mvnw verify`.
 
 ## Support
 
