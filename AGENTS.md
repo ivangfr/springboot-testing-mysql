@@ -20,7 +20,7 @@ All commands use the Maven Wrapper from the repository root.
 # Compile
 ./mvnw clean compile --projects user-service
 
-# Run the application (requires MySQL; see docker-compose.yml)
+# Run the application (requires MySQL; see compose.yaml)
 ./mvnw clean spring-boot:run --projects user-service
 
 # Start MySQL via Docker Compose
