@@ -33,14 +33,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(UserController.class)
 class UserControllerTests {
 
   @Autowired private MockMvc mockMvc;
 
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private JsonMapper jsonMapper;
 
   @MockitoBean private UserService userService;
 
@@ -113,7 +113,7 @@ class UserControllerTests {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createUserRequest)))
+                    .content(jsonMapper.writeValueAsString(createUserRequest)))
             .andDo(print());
 
     resultActions
@@ -136,7 +136,7 @@ class UserControllerTests {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createUserRequest)))
+                    .content(jsonMapper.writeValueAsString(createUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isConflict());
@@ -152,7 +152,7 @@ class UserControllerTests {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createUserRequest)))
+                    .content(jsonMapper.writeValueAsString(createUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isBadRequest());
@@ -168,7 +168,7 @@ class UserControllerTests {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createUserRequest)))
+                    .content(jsonMapper.writeValueAsString(createUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isBadRequest());
@@ -183,7 +183,7 @@ class UserControllerTests {
             .perform(
                 post(API_USERS_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(createUserRequest)))
+                    .content(jsonMapper.writeValueAsString(createUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isBadRequest());
@@ -201,7 +201,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions
@@ -223,7 +223,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, 1L)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isNotFound());
@@ -242,7 +242,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isConflict());
@@ -261,7 +261,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions.andExpect(status().isConflict());
@@ -281,7 +281,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions
@@ -307,7 +307,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions
@@ -333,7 +333,7 @@ class UserControllerTests {
             .perform(
                 patch(API_USERS_ID_URL, user.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(updateUserRequest)))
+                    .content(jsonMapper.writeValueAsString(updateUserRequest)))
             .andDo(print());
 
     resultActions
